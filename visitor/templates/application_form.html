@@ -1,0 +1,103 @@
+{% extends "base.html" %} <!-- Call of the HTML Head-->
+{% block content %} <!-- Application Form -->
+<div class="container my-5 d-flex flex-column align-items-center">
+    <h2 class="text-center mb-2 p-2 border border-dark rounded">Votre Candidature</h2>
+    <div class="container bg-light m-5 p-4 border border-dark rounded">
+        <form action="/application?postID={{ postID }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="d-flex align-items-center justify-content-evenly">
+                <div class="d-flex flex-column w-50 p-3">
+                    <div class="form-group mb-3">
+                        <label class="fw-bold" for="name">Nom</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="form-group">
+                        <label class="fw-bold" for="email">Email</label>
+                        {{ form.email }}
+                    </div>
+                </div>
+    
+                <div class="d-flex flex-column w-50 p-3">
+                    <div class="form-group mb-3">
+                        <label class="fw-bold" for="firstname">Prénom</label>
+                        {{ form.firstname }}
+                    </div>
+                    <div class="form-group">
+                        <label class="fw-bold" for="phone">Téléphone</label>
+                        {{ form.phone }}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="form-group my-2 px-3">
+                    <label class="fw-bold" for="password">Mot de passe</label>
+                    {{ form.password }}
+                </div>
+                <div class="form-group my-2 px-3">
+                    <label class="fw-bold" for="confirm">Confirmer le mot de passe</label>
+                    {{ form.confirm }}
+                    <p id="password_matcherror" style="color: red; display: none">Les mots de passe ne correspondent pas !</p>
+                    <p id="password_conditionerror" style="color: red;display: none">Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscles, majuscules, un chiffres et un caractère spécial</p>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-evenly">
+                <div class="form-group my-2 d-flex flex-column">
+                    <label class="fw-bold" for="cv">Importez votre CV</label>
+                    {{ form.cv }}
+                </div>
+                <div class="form-group my-2 d-flex flex-column">
+                    <label class="fw-bold" for="cover-letter">Importez votre lettre de motivation</label>
+                    {{ form.cover_letter }}
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-center mt-3">
+                <a class="btn btn-secondary rounded me-5" href="/">Annuler</a>
+                <button class="btn btn-success" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger mt-3" role="alert">
+              {{ form.errors }}
+            </div>
+            {% endif %}
+        </form>
+
+    </div>
+
+</div>
+    
+<script>
+    function validatePasswords() { // Javascript function to check if the password and confirm fields are the same
+        confirm = document.getElementById("confirm").value; // get value of the confirm field
+        password = document.getElementById("password").value; // get value of the password field
+        submitBtn = document.getElementById("submit_btn"); // get the submit button element
+        error = document.getElementById("password_matcherror"); // get the displayed error element
+
+        if (confirm !== '' && confirm !== password) { //If confirm's field value isn't empty and isn't the same as password's field value ...
+            submitBtn.disabled = true; // Disable the submit button
+            error.style.display = 'block'; // Display the error element
+        } else {
+            submitBtn.disabled = false; // Enable the Submit Button
+            error.style.display = 'none'; // Make the error element disapear
+        }
+    }
+
+    document.getElementById("confirm").addEventListener('change', validatePasswords); // Listner, activates if the fields's value changes
+    document.getElementById("password").addEventListener('change', validatePasswords); // Listner, activates if the fields's value changes
+    document.getElementById("password").addEventListener('change', function (e){ // Listner, activates if the fields's value changes
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/; // Regex for password condition
+        if(regex.test(document.getElementById("password").value)){ // If the password's field value meets the conditions ..
+            document.getElementById("password_conditionerror").style.display = 'none'; // Makes the error element disapear
+            document.getElementById("submit_btn").diabled = false; // Enable the submit button
+        }
+        else{
+            document.getElementById("password_conditionerror").style.display = 'block'; // Display the error element
+            document.getElementById("submit_btn").disabled = true; // Disable the submit button
+            document.getElementById("password_matcherror").style.display = 'none'; //Makes the other error element disapear
+        }
+    });
+    
+    
+</script>    
+    
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %} <!-- Call the HTML Head -->
+{% load static %} <!-- load the static resources (images) directory -->
+{% block content %} <!-- Application's Confirmation Page -->
+    <main class="d-flex justify-content-center mt-5">
+        <div class="text-center container bg-light d-flex flex-column align-items-center justify-content-center m-5 p-3 rounded">
+            <h2>Nous avons bien reçu votre candidature</h2>
+            <p>Notre équipe va bientôt examiner votre candidature <br>
+            Vous serez notifié <strong>par mail et sur votre espace candidat</strong> lorsque le verdict sera rendu </p>
+            <u>Veuillez conserver ce numéro pour vous connecter : </u>
+            <div class="d-flex flex-row">
+                <h3>{{ application_number }}</h3>
+                <a href="" onclick="copy()"><img src=" {% static "images/copy.svg" %}" style="width: 25px" alt="Copier le numéro de candidat"></a>
+            </div>
+            
+            <div class="d-flex flex-row">
+                <a href="/" class="btn btn-secondary mt-3 me-5">Accueil</a>
+                <a href="/candidate_login" class="btn btn-primary mt-3">Connexion</a>
+            </div>
+            
+            
+        </div>
+    </main>
+
+    <script>
+        function copy(){ // Javascript function to copy the application number in the clipboard
+            navigator.clipboard.writeText('{{ application_number }}'); // Copy application number in the clipboard
+            alert("Le numéro a bien été copié dans votre presse papier"); // Alert the user that the copy was sucessful
+        }
+    </script>
+    
+{% endblock %}
