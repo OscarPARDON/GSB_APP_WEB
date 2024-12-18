@@ -1,7 +1,7 @@
-from django.contrib.auth.models import User
-from django.db import models
+from django.contrib.auth.models import User # Import Django user module
+from django.db import models # Import Django Model Module
+#######################################################################################################################
 
-# Create your models here.
 class Publication(models.Model): # Publication / Jon Offer Model
     title = models.CharField(max_length=100) # Title of the publication / job offer
     description = models.TextField(max_length=500) # Description of the publication / job offer

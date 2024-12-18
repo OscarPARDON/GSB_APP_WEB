@@ -1,23 +1,25 @@
-import os
-from datetime import datetime
-
-from django.db.models import Max
-from django.shortcuts import render, redirect
-
-from DjangoProject1.settings import STATICFILES_DIRS
-from candidate.models import Application
-from visitor.forms import ApplicationForm
-from visitor.models import Publication
-
+import os # Import os management module
+from datetime import datetime # Import datetime module
+from django.contrib.auth.hashers import make_password # Import password creation module
+from django.db.models import Max # Import Database max request module
+from django.shortcuts import render, redirect # Shortcuts to import Django modules
+from DjangoProject1.settings import STATICFILES_DIRS # Import variable from project settings
+from candidate.models import Application # Import Application Model
+from visitor.forms import ApplicationForm # Import Application Form
+from visitor.models import Publication # Import Publication Model
+###################################################################################################################
 
 def visitorpage(request): # Default Page
+    # Get the values needed for the views
     posts = Publication.objects.all() # Get all the Publications in the Database
     error = request.GET.get('error', '') # If an error is sent, get the error
+
     return render(request, 'visitor_page.html', {'posts': posts, 'error': error}) # Call the template and pass the variables
 
 
 def application(request): # Application Page : Displays the application form & manage the data submition
 
+    # Get the id of the job offer in the URL and verify the value
     postID = request.GET.get('postID', '') # Get the job offer linked to the application
     if not (postID and Publication.objects.filter(id=int(postID)).exists()): # If the job offer doesn't exists ...
         return redirect('/') # Redirection to the homepage
@@ -41,13 +43,14 @@ def application(request): # Application Page : Displays the application form & m
         number = f"{today}{max_num_str}" # Build the application number (Current date + incrementing 3 digits number)
 
         if form.is_valid(): # If the submitted data match with expected (see clean() function in Application/forms.py) ...
+
             insertion = Application( # Prepare the insertion in the database
                 application_number=number,
-                candidate_firstname=form.cleaned_data['firstname'],
-                candidate_lastname=form.cleaned_data['name'],
+                candidate_firstname=form.cleaned_data['firstname'].capitalize(),
+                candidate_lastname=form.cleaned_data['name'].upper(),
                 candidate_mail=form.cleaned_data['email'],
                 candidate_phone=form.cleaned_data['phone'],
-                candidate_password=hash(form.cleaned_data['password']), #hash the password
+                candidate_password=make_password(form.cleaned_data['password']), #hash the password
                 post_id=int(postID),
             )
             insertion.save() # Save the application in the database

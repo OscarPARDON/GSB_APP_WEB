@@ -1,10 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Candidate Login page : Login Form, mandatory to access any private_page -->
+    
+    <main class="bg-light">
+    
+        <div class="container d-flex justify-content-center align-items-center vh-100">
+        
+            <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+            
+                <h3 class="text-center mb-4">Espace Candidat</h3>
+            
+                <div class="text-center mt-1 mb-3">
+                    <a href="/"><img src="{% static "images/gsb_logo.png" %}" style="width: 150px" alt="Logo GSB"></a>
+                </div>
+    
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                
+                    <!-- Application Number -->
+                    <div class="mb-3">
+                        <label for="application_number" class="form-label">Numéro de candidature</label>
+                        {{ form.application_number }}
+                    </div>
+                
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        {{ form.password }}
+                    </div>
+                
+                    <!-- Connexion Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </div>
+                
+                    <!-- Error Message -->
+                    {% if form.non_field_errors %} <!-- If a login error occur : display the error  -->
+                        <div class="alert alert-danger mt-3">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                
+                </form>
+            
+            </div>
+        
+        </div>
 
-</body>
-</html>
+    </main>
+
+{% endblock %}

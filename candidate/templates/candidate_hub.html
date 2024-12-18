@@ -1,0 +1,99 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+    
+    <header class="bg-light border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/candidate/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 200px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/candidate/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Logo GSB"></a></div>
+    </header>
+        
+    <main style="margin-top: 10%">
+        <div class="d-flex flex-column align-items-center mb-3">
+            <h1>Votre récapitulatif</h1>
+            <h3>{{ application.candidate_lastname }} {{ application.candidate_firstname }} ({{ application.application_number }})</h3>
+        </div>
+    
+        <div class="container border p-4 alert alert-success" >
+            <p><strong>Vous avez postulé pour l'offre de {{ offer.title }}</strong></p>
+        </div>
+    
+        {% if request.user.status == 1 %} <!-- If the status == 1 : the application is still being reviewed -->
+            <div class="container p-4 border alert alert-warning">
+                <p><strong>Votre candidature est en cours d'examen par notre équipe, vous serez bientôt tenu au courant du verdict </strong></p>
+            </div>
+        {% endif %}
+    
+        {% if request.user.status == 2 %} <!-- If the status == 2 : the application has been rejected -->
+            <div class="container p-4 border alert alert-danger">
+                <p><strong>Malheureusment, votre candidture n'a pas été retenue, la candidature sera automatiquement supprimée dans les 15j suivant le verdict</strong></p>
+            </div>
+        {% endif %}
+    
+        {% if request.user.status == 3 %} <!-- If the status == 3 : the application has been accepted -->
+            <div class="container p-4 border alert alert-success">
+                <p><strong>Félicitations, votre candidature a été retenue, vous serez contacté prochainement par notre équipe  </strong></p>
+            </div>
+        {% endif %}
+    
+        <div class="container border p-4 mb-3" >
+        
+            <h3>Contact</h3>
+            <div class="d-flex flex-column">
+                <p>Mail : {{ application.candidate_mail }}</p>
+                {% if application.candidate_phone %} <!-- Display the candidate's phone number if it is set -->
+                    <p>Téléphone : {{ application.candidate_phone }}</p>
+                {% endif %}
+            </div>
+        
+        </div>
+    
+        <div class="container border p-4 mb-3">
+        
+            <h3>Vos Fichiers</h3>
+            <div class="d-flex flex-row justify-content-evenly">
+                {% if file_data.CV == 1 %} <!-- If the CV file exists : display the link to access the file -->
+                    <a class="btn btn-secondary border-dark d-flex flex-column align-items-center p-2 px-5" href="/candidate/show_file?file=cv"  target="_blank">CV</a>
+                {% else %} <!-- Else : Display a disabled button to inform the user that the file was not found -->
+                    <button class="btn btn-secondary" disabled>Fichier Indisponible</button>
+                {% endif %}
+                {% if file_data.coverletter == 1 %} <!-- If the Cover Letter file exists : display the link to access the file -->
+                    <a class="btn btn-secondary border-dark d-flex flex-column align-items-center p-2 " href="/candidate/show_file?file=coverletter" target="_blank">Lettre de motivation</a>
+                {% else %} <!-- Else : Display a disabled button to inform the user that the file was not found -->
+                    <button class="btn btn-secondary" disabled>Fichier Indisponible</button>
+                {% endif %}
+            </div>
+        
+        </div>
+    
+        <div class="container border p-4 mb-4">
+            
+            <h3>Actions</h3>
+            <div class="d-flex flex-row justify-content-evenly">
+                <a href="update" class="btn btn-primary py-2 px-3">Modifier</a>
+                <button class="btn btn-danger py-2 px-3" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</button>
+            </div>
+            
+        </div>
+    
+    </main>
+    
+    <!-- Deletion Confirmation Modal -->
+    <div class="modal fade" id="confirm_deletion_modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-body">
+                    <h5 class="modal-title">Etes vous sûr ? La candidature sera définitivement supprimée ...</h5>
+                </div>
+                
+                <div class="modal-footer"> 
+                    <a type="submit" href="/candidate/delete" class="btn btn-danger" id="submit_deletion">Supprimer</a>
+                    <a type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</a>
+                </div>
+                    
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

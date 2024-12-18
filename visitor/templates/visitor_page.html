@@ -8,51 +8,81 @@
         <div class="me-5"><button class="btn btn-primary rounded" data-bs-toggle="modal" data-bs-target="#login_modal">Connexion</button></div>
     </header>
     
-    <main class="d-flex flex-column align-items-center" style="padding-top: 200px">
-        <h1 class="fw-bold mb-3 text-decoration-underline">Nos offres d'emplois :</h1>
-        {% for post in posts %}
-            <div class="card bg-light my-3" style="width: 60vw">
-                <div class="card-header text-center bg-secondary text-white">
-                    {{ post.title }}
-                </div>
-                <div class="card-body text-center mx-3">
-                    {{ post.description }}
-                </div>
-                <div class="card-footer text-center">
-                    <a class="btn btn-success rounded" href="/application?postID={{ post.id }}">Postuler</a>
-                </div>
-            </div>
-        {% endfor %}
+    <main class="d-flex flex-column align-items-center" style="padding-top: 11%">
     
-    <div class="modal" id="login_modal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Vous Etes ... ?</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="d-flex flex-row align-items-center">
-          <div class="container d-flex flex-column align-items-center">
-            <a class="btn btn-danger rounded p-5" href="">Espace Employé</a>
-          </div>
-            <div>
-                <u class="fw-bold">OU</u>
+        <h1 class="fw-bold mb-3">Nos offres d'emplois :</h1>
+    
+        {% if not posts %} <!-- If there are no posts in the database -->
+            
+            <div class="container mt-5 p-5 bg-info rounded">
+                <h3 class="text-center text-white">Aucune offre pour le moment</h3>
             </div>
-          <div class="container d-flex flex-column align-items-center">
-            <a class="btn btn-primary rounded p-5" href="">Espace Candidat</a>
+            
+        {% else %} <!-- If there are posts to display -->
+            
+            {% for post in posts %} <!-- Display all the posts -->
+                
+                <div class="card bg-light my-3" style="width: 60vw">
+                
+                    <div class="card-header text-center bg-secondary text-white">
+                        {{ post.title }}
+                    </div>
+                    
+                    <div class="card-body text-center mx-3">
+                        {{ post.description }}
+                    </div>
+                    
+                    <div class="card-footer text-center">
+                        <a class="btn btn-success rounded" href="/application?postID={{ post.id }}">Postuler</a>
+                    </div>
+                
+                </div>
+                
+            {% endfor %}
+            
+        {% endif %}
+    
+        <!-- Modal to chose between employees and candidates login page -->
+        <div class="modal" id="login_modal" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+                
+              <div class="modal-header">
+                <h5 class="modal-title">Vous Etes ... ?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+                
+              <div class="modal-body">
+                <div class="d-flex flex-row align-items-center">
+                    
+                  <div class="container d-flex flex-column align-items-center">
+                    <a class="btn btn-danger rounded p-5" href="">Espace Employé</a>
+                  </div>
+                    
+                    <div>
+                        <u class="fw-bold">OU</u>
+                    </div>
+                    
+                  <div class="container d-flex flex-column align-items-center">
+                    <a class="btn btn-primary rounded p-5" href="/candidate/hub">Espace Candidat</a>
+                  </div>
+                    
+                </div>
+                  
+              </div>
+                
+              <div class="modal-footer d-flex justify-content-center">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+              </div>
+                
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer d-flex justify-content-center">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-      </div>
-    </div>
-  </div>
-</div>
+    
+        {% if error %} <!-- If an error is sent to the page, display the error -->
+            <script>alert('{{ error }}');</script> <!-- Javascript script to alert the user in case of an error -->
+        {% endif %}
+    
     </main>
-    {% if error %}
-        <script>alert('{{ error }}');</script> <!-- Javascript function to alert the user in case of an error -->
-    {% endif %}
     
 {% endblock %}
