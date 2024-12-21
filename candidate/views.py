@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout # Import Django Auth
 from django.http import Http404, FileResponse # Import Django HTTP Module
 from django.shortcuts import render, redirect, get_object_or_404 # Shortcut to import some Django Modules
 from visitor.models import Publication # Import the Publication Model
-from .forms import ApplicationLoginForm, ApplicationUpdateForm # Import the Login Form
+from .forms import ApplicationLoginForm, ApplicationUpdateForm # Import the Login and Update Forms
 from .models import Application # Import the Application Model
 ######################################################################################################################
 
@@ -23,7 +23,7 @@ def candidate_login(request): # This views manages the candidates login process
             # Authentication
             user = authenticate(request, application_number=application_number, password=password)
             if user: # If the authentication was successful ...
-                login(request, user) # Log the user in
+                login(request, user)  # Log the user in
                 return redirect('candidate_hub') # Redirect to the candidate's main page
             else: # If the authentication failed ...
                 form.add_error(None, "Numéro de candidature ou mot de passe incorrect.") # Send back to the login page with a message
@@ -35,13 +35,16 @@ def candidate_login(request): # This views manages the candidates login process
         if application_number: # If an application number is passed in the URL
             form = ApplicationLoginForm(initial={'application_number': application_number}) # Autocomplete Application Number in the login form
         else : # If no application number is passed in the URL
-            form = ApplicationLoginForm() # Empty login form
+            form = ApplicationLoginForm() # Set New login form
 
     return render(request, 'candidate_login.html', {'form': form}) # Call the login page
 
-def candidate_logout(request): # This view log out the user if called
-    logout(request)  # Log out the current user
-    return redirect('..')  # Redirection on the visitor page
+
+def candidate_logout(request): # View to log out the user
+    logout(request) # Log out the user
+    response = redirect('/') # Set the redirection url to the candidate homepage
+    response.delete_cookie('sessionid') # Delete the session cookie
+    return response # Redirect to the candidate homepage
 
 def candidate_hub(request): # This view manages the candidate's main page
 

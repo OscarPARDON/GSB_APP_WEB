@@ -8,7 +8,7 @@
         
             <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
             
-                <h3 class="text-center mb-4">Espace Candidat</h3>
+                <h3 class="text-center mb-4">Espace Employé</h3>
             
                 <div class="text-center mt-1 mb-3">
                     <a href="/"><img src="{% static "images/gsb_logo.png" %}" style="width: 150px" alt="Logo GSB"></a>
@@ -17,10 +17,10 @@
                 <form method="post" novalidate>
                     {% csrf_token %}
                 
-                    <!-- Application Number -->
+                    <!-- Identifier -->
                     <div class="mb-3">
-                        <label for="application_number" class="form-label">Numéro de candidature</label>
-                        {{ form.application_number }}
+                        <label for="application_number" class="form-label">Identifiant</label>
+                        {{ form.employee_id }}
                     </div>
                 
                     <!-- Password -->

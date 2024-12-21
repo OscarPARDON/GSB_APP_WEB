@@ -2,16 +2,17 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
     
-    <header class="bg-light border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+    <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
             <div></div>
-            <div class="ms-5 ps-3"><a href="/candidate/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 200px" alt="Logo GSB"></a></div>
-            <div class="me-5"><a href="/candidate/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Logo GSB"></a></div>
+            <div class="ms-5 ps-3"><a href="/candidate/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/candidate/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
         
-    <main style="margin-top: 10%">
-        <div class="d-flex flex-column align-items-center mb-3">
-            <h1>Votre récapitulatif</h1>
-            <h3>{{ application.candidate_lastname }} {{ application.candidate_firstname }} ({{ application.application_number }})</h3>
+    <main style="margin-top: 7%" class="container bg-light d-flex flex-column align-items-center">
+    
+        <div class="d-flex flex-column align-items-center bg-info text-white rounded p-4 mb-3 w-50">
+            <h2 class="text-center fw-bold">Votre récapitulatif</h2>
+            <h3 class="text-center">{{ application.candidate_lastname }} {{ application.candidate_firstname }} ({{ application.application_number }})</h3>
         </div>
     
         <div class="container border p-4 alert alert-success" >
@@ -36,42 +37,44 @@
             </div>
         {% endif %}
     
-        <div class="container border p-4 mb-3" >
+        <div class="container border p-4 mb-3 rounded" >
         
-            <h3>Contact</h3>
+            <h3 class="mb-2">Contact</h3>
             <div class="d-flex flex-column">
-                <p>Mail : {{ application.candidate_mail }}</p>
+                <p class="fs-5"><strong>Mail :</strong> {{ application.candidate_mail }}</p>
                 {% if application.candidate_phone %} <!-- Display the candidate's phone number if it is set -->
-                    <p>Téléphone : {{ application.candidate_phone }}</p>
+                    <p class="fs-5"><strong>Téléphone :</strong> {{ application.candidate_phone }}</p>
                 {% endif %}
             </div>
         
         </div>
     
-        <div class="container border p-4 mb-3">
+        <div class="container border p-4 mb-3 rounded">
         
             <h3>Vos Fichiers</h3>
             <div class="d-flex flex-row justify-content-evenly">
                 {% if file_data.CV == 1 %} <!-- If the CV file exists : display the link to access the file -->
-                    <a class="btn btn-secondary border-dark d-flex flex-column align-items-center p-2 px-5" href="/candidate/show_file?file=cv"  target="_blank">CV</a>
+                    <a class="btn btn-lg btn-secondary border-dark d-flex flex-column align-items-center p-2 px-5" href="/candidate/show_file?file=cv"  target="_blank">CV</a>
                 {% else %} <!-- Else : Display a disabled button to inform the user that the file was not found -->
-                    <button class="btn btn-secondary" disabled>Fichier Indisponible</button>
+                    <button class="btn btn-lg btn-secondary" disabled>Fichier Indisponible</button>
                 {% endif %}
                 {% if file_data.coverletter == 1 %} <!-- If the Cover Letter file exists : display the link to access the file -->
-                    <a class="btn btn-secondary border-dark d-flex flex-column align-items-center p-2 " href="/candidate/show_file?file=coverletter" target="_blank">Lettre de motivation</a>
+                    <a class="btn btn-lg btn-secondary border-dark d-flex flex-column align-items-center p-2 " href="/candidate/show_file?file=coverletter" target="_blank">Lettre de motivation</a>
                 {% else %} <!-- Else : Display a disabled button to inform the user that the file was not found -->
-                    <button class="btn btn-secondary" disabled>Fichier Indisponible</button>
+                    <button class="btn btn-lg btn-secondary" disabled>Fichier Indisponible</button>
                 {% endif %}
             </div>
         
         </div>
     
-        <div class="container border p-4 mb-4">
+        <div class="container border p-4 mb-4 rounded">
             
             <h3>Actions</h3>
             <div class="d-flex flex-row justify-content-evenly">
-                <a href="update" class="btn btn-primary py-2 px-3">Modifier</a>
-                <button class="btn btn-danger py-2 px-3" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</button>
+                {% if application.status == 1 or application.status == 3 %}
+                    <a href="update" class="btn btn-lg btn-primary py-2 px-3">Modifier</a>
+                {% endif %}
+                <button class="btn btn-lg btn-danger py-2 px-3" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</button>
             </div>
             
         </div>

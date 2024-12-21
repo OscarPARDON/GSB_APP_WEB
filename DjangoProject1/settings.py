@@ -16,7 +16,7 @@ from pathlib import Path # Import path management module
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOGIN_URLS = ['/candidate/login','']  # URLS to the login views
+LOGIN_URLS = ['/candidate/login','/employee/login']  # URLS to the login views
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ''
@@ -24,7 +24,7 @@ SECRET_KEY = ''
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [] # Whitelist
+ALLOWED_HOSTS = [] # Host Whitelist
 
 # Application definition
 INSTALLED_APPS = [
@@ -35,25 +35,35 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', # Static files management App
     'django.contrib.admin', # Admin user management App
     'visitor', # Visitors management app
-    'candidate.apps.CandidateConfig' # Candidates management app
+    'candidate.apps.CandidateConfig', # Candidates management app
+    'employee.apps.EmployeeConfig' # Employees management app
 ]
 
-# List of the backends used for authentication
+# List of the backend(s) used for authentication
 AUTHENTICATION_BACKENDS = [
-    'candidate.backends.ApplicationAuthBackend',
+    'DjangoProject1.backends.GlobalAuthBackend' # Global Authentication Backend
 ]
 
 # Middlewares used by the project
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware', # Middleware that manages sessions
     'django.contrib.auth.middleware.AuthenticationMiddleware', # Middleware that manages authentication
-    'candidate.middleware.LoginRequiredMiddleware', # Middleware that manages login requirements
+    'candidate.middleware.LoginRequiredMiddleware', # Middleware that manages login requirements for candidates
+    'employee.middleware.LoginRequiredMiddleware', # Middleware that manages login requirements for employees
     'django.middleware.security.SecurityMiddleware', # Middleware that manages the security of the project
     'django.middleware.common.CommonMiddleware', # Common Middleware
     'django.middleware.csrf.CsrfViewMiddleware', # Middleware that manages CSRF tokens
     'django.contrib.messages.middleware.MessageMiddleware', # Middleware that manages messages
     'django.middleware.clickjacking.XFrameOptionsMiddleware', # Middleware that protect the project against clickjacking
 ]
+
+# Sessions Configuration
+SESSION_ENGINE = 'django.contrib.sessions.backends.db' # Session management engine
+SESSION_COOKIE_AGE = 6400  # Session Cookie Lifetime (second)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Destroy the session if the user close the navigator
+SESSION_SAVE_EVERY_REQUEST = True # Reset the Session Cookie Lifetime at each request (The Cookie expires if the user is inactive)
+SESSION_COOKIE_SECURE = True # Use Secure Cookie to store the Session
+SESSION_COOKIE_HTTPONLY = True # Cookie is only accessible with HTTP, no Javascript can access the cookie
 
 # Default URL configuration file
 ROOT_URLCONF = 'DjangoProject1.urls'
@@ -81,7 +91,7 @@ WSGI_APPLICATION = 'DjangoProject1.wsgi.application' # WSGI of the applications
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': { # Default Database
-        'ENGINE': 'django.db.backends.mysql', # Engine used by the DB
+        'ENGINE': '', # Engine used by the DB
         'NAME': '', # Name of the DB
         'USER': '', # Username to connect to the DB
         'PASSWORD': '', # Password to connect to the DB

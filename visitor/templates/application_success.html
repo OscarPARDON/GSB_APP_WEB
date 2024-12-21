@@ -1,26 +1,43 @@
 {% extends 'base.html' %} <!-- Call the HTML Head -->
 {% load static %} <!-- load the static resources (images) directory -->
 {% block content %} <!-- Application's Confirmation Page -->
+
+    <style>
+        
+        #check{
+            animation: tilt-shaking 1s linear infinite;
+        }
+
+        @keyframes tilt-shaking {
+          0% { transform: rotate(0deg); }
+          25% { transform: rotate(5deg); }
+          50% { transform: rotate(0deg); }
+          75% { transform: rotate(-5deg); }
+          100% { transform: rotate(0deg); }
+        }
     
-    <main class="d-flex justify-content-center mt-5">
+    </style>
     
-        <div class="text-center container bg-light d-flex flex-column align-items-center justify-content-center m-5 p-3 rounded">
+    <main class="bg-black d-flex vh-100 justify-content-center align-items-center">
+    
+        <div class="text-center container bg-light d-flex flex-column align-items-center justify-content-center p-5 rounded">
             
-            <h2>Nous avons bien reçu votre candidature</h2>
+            <h1 class="fw-bold bg-info text-white rounded p-4 mb-3">Nous avons bien reçu votre candidature</h1>
             
-            <p>Notre équipe va bientôt examiner votre candidature <br>
-                
-            Vous serez notifié <strong>par mail et sur votre espace candidat</strong> lorsque le verdict sera rendu </p>
-            <u>Veuillez conserver ce numéro pour vous connecter : </u>
+            <img id="check" src="{% static 'images/check.svg' %}" style="width: 130px" alt="Logo GSB">
             
+            <u class="fs-4">Veuillez conserver ce numéro pour vous connecter : </u>
             <div class="d-flex flex-row">
-                <h3>{{ application_number }}</h3>
-                <a href="" onclick="copy()"><img src=" {% static "images/copy.svg" %}" style="width: 25px" alt="Copier le numéro de candidat"></a>
+                <h3 class="fs-2">{{ application_number }}</h3>
+                <a href="" onclick="copy()"><img src=" {% static "images/copy.svg" %}" style="width: 40px" alt="Copier le numéro de candidat"></a>
             </div>
             
+            <p class="fs-5">Notre équipe va bientôt examiner votre candidature <br>
+            Vous serez notifié <strong>par mail et sur votre espace candidat</strong> lorsque le verdict sera rendu </p>
+            
             <div class="d-flex flex-row">
-                <a href="/" class="btn btn-secondary mt-3 me-5">Accueil</a>
-                <a href="/candidate/login?application_number={{ application_number }}" class="btn btn-primary mt-3">Connexion</a>
+                <a href="/" class="btn btn-lg btn-secondary mt-3 me-5">Accueil</a>
+                <a href="/candidate/login?application_number={{ application_number }}" class="btn btn-lg btn-primary mt-3">Connexion</a>
             </div>
             
         </div>

@@ -4,38 +4,32 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required to access the private pages&#10;- Candidate Private Space : displays all the data about of candidate's application and enable the user to edit this data and to delete the application&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available">
-      <change afterPath="$PROJECT_DIR$/DjangoProject1/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/images/logout.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/images/show.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/backends.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/middleware.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/migrations/0004_application_last_login.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/migrations/0005_application_status.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/migrations/0006_alter_application_status.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/migrations/0007_alter_application_status.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/templates/candidate_hub.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/candidate/templates/update_application_form.html" afterDir="false" />
+    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required et controlled to access the private pages&#10;- Candidate Private Space : displays all the data about the candidate's application, enables the user to edit the data and to delete the application&#10;- Upgrade and login forms management : management of the received data, every input is checked in the front-end and back-end before being communicated to the DB if the data is compliant&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;- Added the settings.py file : It contains some necessary configuration variables, the sensitive variables have been removed (empty fields)&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available&#10;- Increased readability of the new and already existing code">
+      <change afterPath="$PROJECT_DIR$/DjangoProject1/backends.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/forms.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/middleware.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/templates/employee_hub.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/templates/employee_login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/templates/offer_applications.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/employee/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/DjangoProject1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DjangoProject1.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DjangoProject1/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DjangoProject1/static/images/logout.svg" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/static/images/logout.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DjangoProject1/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DjangoProject1/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/wsgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candidate/backends.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/candidate/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candidate/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/middleware.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candidate/templates/candidate_hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/candidate_hub.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/candidate/templates/candidate_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/candidate_login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/candidate/templates/update_application_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/update_application_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/candidate/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visitor/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visitor/templates/application_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/application_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visitor/templates/application_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/application_success.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visitor/templates/visitor_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/visitor_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/visitor/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,6 +84,7 @@
     &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
     &quot;django.template.preview.state&quot;: &quot;SHOW_EDITOR_AND_PREVIEW&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/Oscar/PycharmProjects/DjangoProject1/candidate/templates&quot;,
@@ -181,7 +176,15 @@
       <workItem from="1734372598530" duration="5028000" />
       <workItem from="1734420984036" duration="23356000" />
       <workItem from="1734460557862" duration="14118000" />
-      <workItem from="1734508686271" duration="12071000" />
+      <workItem from="1734508686271" duration="23851000" />
+      <workItem from="1734548351650" duration="4939000" />
+      <workItem from="1734593929370" duration="22742000" />
+      <workItem from="1734632326571" duration="7606000" />
+      <workItem from="1734682185158" duration="9777000" />
+      <workItem from="1734698249839" duration="2479000" />
+      <workItem from="1734715525482" duration="14601000" />
+      <workItem from="1734793627740" duration="2536000" />
+      <workItem from="1734796283159" duration="16344000" />
     </task>
     <task id="LOCAL-00001" summary="ADDED :&#10;- Main page that displays all the current job offers&#10;- Choose login modal : let you chose between the employee login page and the candidates login page&#10;- Application form to let the user create an application for a job offer&#10;- Application form management : management of the recieved data, every input is checked in the front-end and back-end and inserted in the Database&#10;- Successful Application Page : Page displayed if the application form is successfully sent, this page display the application number that the user needs to login">
       <option name="closed" value="true" />
@@ -199,7 +202,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734525361839</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required et controlled to access the private pages&#10;- Candidate Private Space : displays all the data about the candidate's application, enables the user to edit the data and to delete the application&#10;- Upgrade and login forms management : management of the received data, every input is checked in the front-end and back-end before being communicated to the DB if the data is compliant&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;- Added the settings.py file : It contains some necessary configuration variables, the sensitive variables have been removed (empty fields)&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available&#10;- Increased readability of the new and already existing code">
+      <option name="closed" value="true" />
+      <created>1734526359111</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734526359112</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -222,6 +233,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="ADDED :&#10;- Main page that displays all the current job offers&#10;- Choose login modal : let you chose between the employee login page and the candidates login page&#10;- Application form to let the user create an application for a job offer&#10;- Application form management : management of the recieved data, every input is checked in the front-end and back-end and inserted in the Database&#10;- Successful Application Page : Page displayed if the application form is successfully sent, this page display the application number that the user needs to login" />
     <MESSAGE value="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required to access the private pages&#10;- Candidate Private Space : displays all the data about of candidate's application and enable the user to edit this data and to delete the application&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available" />
-    <option name="LAST_COMMIT_MESSAGE" value="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required to access the private pages&#10;- Candidate Private Space : displays all the data about of candidate's application and enable the user to edit this data and to delete the application&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available" />
+    <MESSAGE value="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required et controlled to access the private pages&#10;- Candidate Private Space : displays all the data about the candidate's application, enables the user to edit the data and to delete the application&#10;- Upgrade and login forms management : management of the received data, every input is checked in the front-end and back-end before being communicated to the DB if the data is compliant&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;- Added the settings.py file : It contains some necessary configuration variables, the sensitive variables have been removed (empty fields)&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available&#10;- Increased readability of the new and already existing code" />
+    <option name="LAST_COMMIT_MESSAGE" value="ADDED :&#10;- Login System : Enable the user to access his private space, and block the unauthorized users.&#10;- Access management for private pages : Authentication is strictly required et controlled to access the private pages&#10;- Candidate Private Space : displays all the data about the candidate's application, enables the user to edit the data and to delete the application&#10;- Upgrade and login forms management : management of the received data, every input is checked in the front-end and back-end before being communicated to the DB if the data is compliant&#10;- Secured access to personal files : the access to the application's files is only possible by the candidate himself&#10;- Added the settings.py file : It contains some necessary configuration variables, the sensitive variables have been removed (empty fields)&#10;&#10;MODIFICATIONS : &#10;- Main page now displays a message if no offers are available&#10;- Increased readability of the new and already existing code" />
   </component>
 </project>

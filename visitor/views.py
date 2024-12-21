@@ -21,7 +21,7 @@ def application(request): # Application Page : Displays the application form & m
 
     # Get the id of the job offer in the URL and verify the value
     postID = request.GET.get('postID', '') # Get the job offer linked to the application
-    if not (postID and Publication.objects.filter(id=int(postID)).exists()): # If the job offer doesn't exists ...
+    if not (postID and postID.isdigit() and Publication.objects.filter(id=int(postID)).exists()): # If the job offer doesn't exist ...
         return redirect('/') # Redirection to the homepage
 
     if request.method == 'POST': # If a form is submitted
@@ -34,6 +34,7 @@ def application(request): # Application Page : Displays the application form & m
         # Application Number Generation
         today = datetime.now().strftime('%Y%m%d')# Get the current date in format YYYYMMDD
         max_application = Application.objects.aggregate(Max('application_number'))['application_number__max'] # Get the most recent application number
+
         if max_application and max_application[:8] == today: # If this is not the first application today ...
             max_num = int(max_application[-3:]) + 1 # Incrementation of the biggest number
         else: # If this is the first application of the day ...
@@ -42,6 +43,7 @@ def application(request): # Application Page : Displays the application form & m
         max_num_str = f"{max_num:03}" # Formate the 3 digits number
         number = f"{today}{max_num_str}" # Build the application number (Current date + incrementing 3 digits number)
 
+        # Form data validation and insertion into the database
         if form.is_valid(): # If the submitted data match with expected (see clean() function in Application/forms.py) ...
 
             insertion = Application( # Prepare the insertion in the database
@@ -83,4 +85,5 @@ def application(request): # Application Page : Displays the application form & m
 
 def application_success(request): # Successful Application Page : inform the user that the application was sucessfully sent and display the application number needed to connect
     application_number = request.GET.get('application_number', '') # Get the newly created application number
+    if (application_number == '') or not (Application.objects.filter(application_number=application_number)): return redirect('/') # If the received application number is null or incorrect
     return render(request,'application_success.html',{'application_number': application_number}) # Call the successful application template and pass the variable
