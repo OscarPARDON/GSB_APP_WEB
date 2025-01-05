@@ -18,6 +18,14 @@ class ApplicationForm(forms.Form):
     def clean(self): #verify form data
         cleaned_data = super().clean() # Default input cleaning and validation function
 
+        firstname = cleaned_data.get('firstname')  # Get the candidate firstname cleaned by the default function
+        lastname = cleaned_data.get('name')  # Get the candidate lastname cleaned by the default function
+
+        if firstname:  # If a firstname value is defined
+            cleaned_data['firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
+        if lastname:
+            cleaned_data['name'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
+
         # Password Verification
         password = cleaned_data.get('password') # Get the password cleaned by the default function
         confirm = cleaned_data.get('confirm') # Get the confirmed password cleaned by the default function

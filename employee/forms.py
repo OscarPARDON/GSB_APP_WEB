@@ -1,6 +1,11 @@
 from django import forms # Import Django form module
+from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator  # Import Django Email Validator
 from candidate.models import Application # Import the Application Model
+from employee.models import Employee
+from visitor.models import Publication
+
+
 ########################################################################################################"
 
 # Form used to by the employee login system
@@ -17,3 +22,95 @@ class ApplicationStatusForm(forms.ModelForm):
 
     application_number = forms.CharField(widget=forms.TextInput(),max_length=11) # Application Number
     new_status = forms.IntegerField(widget=forms.TextInput(attrs={'hidden':'true'})) # New status
+
+# Form used to create a new employee
+class NewEmployeeForm(forms.Form):
+
+    employee_lastname = forms.CharField(max_length=50,widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder':"Entrez le nom de famille de l'employé"}))) # Lastname of the employee
+    employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+    role = forms.ChoiceField(choices=[('employee','Employé'),('admin','Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee (Admin or Employee)
+
+    def clean(self):
+        cleaned_data = super().clean() # Get the form data cleaned by the default clean function
+
+        firstname = cleaned_data.get('employee_firstname')  # Get the employee firstname cleaned by the default function
+        lastname = cleaned_data.get('employee_lastname')  # Get the employee lastname cleaned by the default function
+
+        if firstname:  # If a firstname value is defined
+            cleaned_data['employee_firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
+        if lastname: # If a lastname value is defined
+            cleaned_data['employee_lastname'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
+
+        return cleaned_data # Return the cleaned values
+
+# Form used to update employees
+class UpdateEmployeeForm(forms.ModelForm):
+
+    class Meta:
+        model = Employee # Model linked to the form
+        fields = ['employee_lastname','employee_firstname','employee_email','role'] # Fields to modify
+
+    employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
+    employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FIrstname of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+    role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
+
+    def clean(self):
+        cleaned_data = super().clean() # Get the form data cleaned by the default function
+
+        firstname = cleaned_data.get('employee_firstname')  # Get the employee firstname cleaned by the default function
+        lastname = cleaned_data.get('employee_lastname')  # Get the employee lastname cleaned by the default function
+
+        if firstname:  # If a firstname value is defined
+            cleaned_data['employee_firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
+        if lastname: # If a lastname value is defined
+            cleaned_data['employee_lastname'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
+        if Employee.objects.filter(employee_firstname=firstname,employee_lastname=lastname).exists(): # If an employee with this name already exists ...
+            raise ValidationError("Cet employé existe déjà") # Sends an error : employee already exists
+
+        email = cleaned_data.get('employee_email') # Get the employee email cleaned by the default function
+        if Employee.objects.filter(employee_email=email).exists(): # If an existing employee already uses this mail ...
+            raise ValidationError("Cet email est déjà utilisé par un employé, veuillez en renseigner un autre") # Sends an error : the email is already used
+
+        return cleaned_data # Return the cleaned values
+
+# Form used when the employee wants to edit himself (Role is disabled)
+class UpdateSelfForm(forms.ModelForm):
+
+    class Meta:
+        model = Employee # Model linked to the form
+        fields = ['employee_lastname','employee_firstname','employee_email'] # Fields to modify
+
+    employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
+    employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+
+    def clean(self):
+        cleaned_data = super().clean() # Get the form data cleaned by the default function
+
+        firstname = cleaned_data.get('employee_firstname')  # Get the user firstname cleaned by the default function
+        lastname = cleaned_data.get('employee_lastname')  # Get the user lastname cleaned by the default function
+
+        if firstname:  # If a firstname value is defined
+            cleaned_data['employee_firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
+        if lastname:
+            cleaned_data['employee_lastname'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
+
+        return cleaned_data # Return the cleaned values
+
+# Form used to create a new publication
+class NewPublicationForm(forms.Form):
+
+    title = forms.CharField(max_length=100, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le titre de la nouvelle publication"}))) # Title of the publication
+    description = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Entrez le description de la nouvelle publication",'style':'resize:none'})) # Description of the publication
+
+# Form used to update a publication
+class UpdatePublicationForm(forms.ModelForm):
+
+    class Meta:
+        model = Publication # Model linked to the form
+        fields = ['title','description'] # Fields to update
+
+    title = forms.CharField(max_length=100, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le titre de la nouvelle publication"}))) # Title of the publication
+    description = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Entrez le description de la nouvelle publication",'style':'resize:none'})) # Description of the publication

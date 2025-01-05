@@ -1,5 +1,6 @@
 from django.db import models # Import Django Model Module
 from django.contrib.auth.models import AbstractBaseUser # Import Django Authentication Module
+from visitor.models import Publication #Import the Publication Model
 ##############################################################################################################
 
 class Application(models.Model): # Application Model
@@ -10,7 +11,7 @@ class Application(models.Model): # Application Model
     candidate_phone = models.CharField(default=None,max_length=10,blank=True, null=True)  # Phone Number of the candidate (Optional)
     candidate_password = models.CharField(max_length=200) # Password to access to the application data
     status = models.IntegerField(default=1) # Status of the application (In review, Rejected, Accepted)
-    post_id = models.IntegerField() # Id of the job offer that the candidate applied for
+    job_publication = models.ForeignKey(Publication,on_delete=models.CASCADE,related_name='publication') # Job offer that the candidate applied for
     creation_date = models.DateTimeField(auto_now_add=True) # Date of creation of the application
     last_login = models.DateTimeField(auto_now=True) # Last time the candidate logged in
 

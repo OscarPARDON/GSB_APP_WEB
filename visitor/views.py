@@ -26,7 +26,9 @@ def application(request): # Application Page : Displays the application form & m
 
     if request.method == 'POST': # If a form is submitted
 
-        if Application.objects.filter(candidate_firstname=request.POST['firstname'],candidate_lastname=request.POST['name'],post_id=postID).exists(): #If there is already an application from the person on this job offer ...
+        if Application.objects.filter(candidate_firstname=request.POST['firstname'],candidate_lastname=request.POST['name'],job_publication=postID).exists(): # If there is already an application from the person on this job offer ...
+            return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer
+        if Application.objects.filter(candidate_mail=request.POST['email'],job_publication=postID).exists(): #If there is already an application with this mail on this job offer ...
             return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer
 
         form = ApplicationForm(request.POST, request.FILES) # Collect the submited form's data
@@ -53,7 +55,7 @@ def application(request): # Application Page : Displays the application form & m
                 candidate_mail=form.cleaned_data['email'],
                 candidate_phone=form.cleaned_data['phone'],
                 candidate_password=make_password(form.cleaned_data['password']), #hash the password
-                post_id=int(postID),
+                job_publication=Publication.objects.get(id=int(postID)),
             )
             insertion.save() # Save the application in the database
 

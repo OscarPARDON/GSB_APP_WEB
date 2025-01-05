@@ -1,0 +1,123 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- User Management Page : Enable to read, search, create, edit and delete users -->
+
+    <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/employee/admin_hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+
+    <main class="d-flex flex-column align-items-center" style="padding-top: 9%;">
+        
+        <div class="text-center mb-5 w-50 d-flex flex-row">
+            <input type="text" id="search_bar" class="form-control bg-white border-info rounded" placeholder="Rechercher un utilisateur">
+            <a href="new_employee" class="btn btn-success">+</a>
+        </div>
+        
+    
+        <table class="container table border table-hover" >
+        
+            <thead class="border border-dark">
+            
+                <tr>
+                    <th scope="col" style="width: 5%">#</th>
+                    <th scope="col" style="width: 20%">Nom</th>
+                    <th scope="col" style="width: 13%;">Prénom</th> <!-- Click to sort By Status -->
+                    <th scope="col" class="text-center" style="width: 20%">Email</th>
+                    <th scope="col" class="text-center" style="width: 20%">Role</th>
+                    <th scope="col" style="width: 23%"></th>
+                </tr>
+            
+            </thead>
+        
+            <tbody id="applications-table">
+            
+                {% if not users %} <!-- If they are no employees to display, display an error message (because this is theoretically impossible) -->
+                    <tr class="text-center"><td class="p-5" colspan="6"><h5 class="text-secondary fw-bold">Un Problème est survenu</h5></td></tr>
+                {% endif %}
+
+                {% for user in users %} <!-- Display all the employees retrieved in the database -->
+                    
+                    <tr class="align-middle" id="row">
+                    
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td id="lastname">{{ user.employee_lastname }}</td>
+                        <td id="firstname" style="vertical-align: middle;">{{ user.employee_firstname }}</td>
+                        <td class="text-center">{{ user.employee_email }}</td>
+                        <td class="text-center">{{ user.role }}</td>
+                        <td class="text-center">
+                        
+                            <a href="update?userID={{ user.id }}" class="btn btn-primary">Modifier</a>
+                            {% if user.id != request.user.id %} <!-- Don't display the delete button for current user himself -->
+                                <a href="" onclick="fill_deletion_modal({{ user.id }})" class="btn btn-danger ms-3" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</a>
+                            {% endif %}
+                        
+                        </td>
+                    
+                    </tr>
+                    
+                {% endfor %}
+            
+            </tbody>
+
+        </table>
+    
+        <!-- Modal to confirm the deletion of an employee -->
+        <div class="modal fade" id="confirm_deletion_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Etes vous sûr ? L'utilisateur sera définitivement supprimée ...</h5>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <a type="submit" href="/employee/delete?userID=" class="btn btn-danger" id="submit_deletion">Supprimer</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    
+    </main>
+
+    <script>
+    
+        // This function fill automatically the id of the user into the GET variable
+        function fill_deletion_modal(userID){
+            
+            if(userID && Number.isInteger(userID)){ // If the UserID is set and has the right format ...
+                url = "/employee/delete?userID=" + userID; // Create the deletion URL
+                document.getElementById("submit_deletion").href = url; // Send the deletion url into the modal
+            }
+            
+        }
+        
+        // This function hides the employees rows that don't match with the search value
+        function search(){
+            
+            // Collecting the needed values
+            search_value = document.getElementById("search_bar").value; // Search value
+            lines = Array.from(document.querySelectorAll("#row")); // All the employees rows
+            firstnames = Array.from(document.querySelectorAll("#firstname")) // All the employees firstnames
+            lastnames = Array.from(document.querySelectorAll("#lastname")) // All the employees lastnames
+            
+            // For each row, checks if the employees firstname or lastname match with the search value 
+            lines.forEach((line,index) => {
+                if(search_value != '' && (!firstnames[index].textContent.toLowerCase().includes(search_value) && !lastnames[index].textContent.toLowerCase().includes(search_value))){ // If the search value doesn't match with the firstname or lastname ...
+                    line.style.display = 'none'; // Hide the row
+                }
+                else { // If the search value match with the firstname or the lastname ...
+                    line.style.display = ''; // Show the row
+                }
+                
+            });
+        }
+        
+        document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value in the search bar changes
+        
+    </script>
+
+{% endblock %}

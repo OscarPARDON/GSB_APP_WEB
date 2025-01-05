@@ -4,7 +4,6 @@ from django.conf import settings # Import Settings Variables
 from django.contrib.auth import authenticate, login, logout # Import Django Authentication Module
 from django.http import Http404, FileResponse # Import Django HTTP Module
 from django.shortcuts import render, redirect, get_object_or_404 # Shortcut to import some Django Modules
-from visitor.models import Publication # Import the Publication Model
 from .forms import ApplicationLoginForm, ApplicationUpdateForm # Import the Login and Update Forms
 from .models import Application # Import the Application Model
 ######################################################################################################################
@@ -50,7 +49,6 @@ def candidate_hub(request): # This view manages the candidate's main page
 
     # Get the data needed for the view
     application = request.user # Get the candidate's data
-    offer = Publication.objects.get(id=application.post_id).title # Get the title of the job offer the candidate applied for
 
     # Checking the availability of the candidate's files
     dir_path = Path(settings.STATICFILES_DIRS[0]) / 'files' / application.application_number # Path to the candidate's files directory
@@ -63,7 +61,7 @@ def candidate_hub(request): # This view manages the candidate's main page
         else: # No file is found ...
             file_data[filename_base] = 0  # Set the test value to 1 : the file doesn't exist, or it is inaccessible
 
-    return render(request,'candidate_hub.html',{'application':application,'offer':offer,'file_data':file_data}) # Call the candidate's main page
+    return render(request,'candidate_hub.html',{'application':application,'file_data':file_data}) # Call the candidate's main page
 
 def show_file(request): # The view manages the access to the candidate's files
 

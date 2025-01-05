@@ -5,8 +5,9 @@ from django.db import models # Import Django Model Module
 class Employee(models.Model):
     employee_lastname = models.CharField(max_length=50) # Employee's lastname
     employee_firstname = models.CharField(max_length=50) # Employees's firstname
-    employee_email = models.EmailField(max_length=200) # Employee's email also used as login id (unique)
+    employee_email = models.EmailField(max_length=200,unique=True) # Employee's email also used as login id (unique)
     password = models.CharField(max_length=200) # Employee's password (hashed)
+    role = models.CharField(max_length=100,default='employee') # Role of the employee (Admin or Employee)
     last_login = models.DateTimeField(auto_now=True) # Last time the employee logged in
 
     def check_password(self, raw_password): # Function to compare the input password with the password in the database

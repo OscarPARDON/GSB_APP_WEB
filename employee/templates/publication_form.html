@@ -1,0 +1,73 @@
+{% extends "base.html" %} <!-- Call of the HTML Head-->
+{% block content %} <!-- Form to create or update a new publication -->
+
+<style>
+
+    .errorlist li { /* Set the color for all the form error messages  */
+        color:red;
+    }
+
+</style>
+    
+<main class="vh-100 container bg-light my-2 pb-4 d-flex flex-column align-items-center">
+
+    <h1 class="fw-bold bg-info text-white rounded my-4 p-4">{% if action == "new" %}Nouvelle Publication{% elif action == "update" %}Modifier la Publication{% endif %}</h1>
+
+    <div class="container border border-info rounded p-4">
+    
+        {% if action == "new" %} <!-- Form action for the creation form -->
+            <form action="/employee/new_publication" method="post" enctype="multipart/form-data">
+        {% elif action == "update" %} <!-- Form action for the update form -->
+            <form action="/employee/update_publication" method="post" enctype="multipart/form-data">
+        {% endif %}        
+        
+        {% csrf_token %}
+            
+           <div class="mb-3">
+           
+                <label class="fw-bold fs-5" for="title">Titre de la publication</label>
+                {{ form.title }}
+               
+               {% if form.title.errors %} <!-- If error occur with the field, display the erros -->
+                   {{ form.title.errors }}
+               {% endif %}
+           
+            </div>
+            
+            <div>
+            
+                <label class="fw-bold fs-5" for="description">Description de la publication</label>
+                {{ form.description }}
+                
+                {% if form.description.errors %} <!-- If error occur with the field, display the erros -->
+                    {{ form.description.errors }}
+                {% endif %}
+            
+            </div>
+            
+            <div class="d-flex flex-row justify-content-center mt-4">
+            
+                <a class="btn btn-lg btn-secondary me-5" href="/employee/admin_publication_management">Annuler</a>
+                {% if action == "new" %} <!-- Button for the creation form -->
+                    <button type="submit" class="btn btn-lg btn-success">Créer</button>
+                {% elif action == "update" %} <!-- Button for the update form -->
+                    <button type="submit" class="btn btn-lg btn-success">Enregistrer</button>
+                {% endif %}
+            
+            </div>
+            
+            {% if form.non_field_errors %} <!-- If error occur with the form, display the errors -->
+                
+                <div class="alert alert-danger mt-3" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+                
+            {% endif %}
+            
+        </form>
+        
+    </div>
+
+</main>    
+    
+{% endblock %}    

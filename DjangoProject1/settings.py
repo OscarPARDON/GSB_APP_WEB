@@ -16,8 +16,6 @@ from pathlib import Path # Import path management module
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOGIN_URLS = ['/candidate/login','/employee/login']  # URLS to the login views
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ''
 
@@ -48,8 +46,7 @@ AUTHENTICATION_BACKENDS = [
 MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware', # Middleware that manages sessions
     'django.contrib.auth.middleware.AuthenticationMiddleware', # Middleware that manages authentication
-    'candidate.middleware.LoginRequiredMiddleware', # Middleware that manages login requirements for candidates
-    'employee.middleware.LoginRequiredMiddleware', # Middleware that manages login requirements for employees
+    'DjangoProject1.middleware.LoginRequiredMiddleware', # Middleware that manages the access to the pages
     'django.middleware.security.SecurityMiddleware', # Middleware that manages the security of the project
     'django.middleware.common.CommonMiddleware', # Common Middleware
     'django.middleware.csrf.CsrfViewMiddleware', # Middleware that manages CSRF tokens

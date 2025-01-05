@@ -1,0 +1,90 @@
+{% extends "base.html" %} <!-- Call of the HTML Head -->
+{% block content %} <!-- Form to create a new employee -->
+
+<style>
+
+    .errorlist li { /* Set the color for all the form error messages  */
+        color:red;
+    }
+
+</style>
+    
+<main class="vh-100 container bg-light my-2 pb-4 d-flex flex-column align-items-center">
+
+    <h1 class="fw-bold bg-info text-white rounded my-5 p-4">Nouvel Employé</h1>
+
+    <div class="container bg-light p-4 border border-info rounded">
+    
+        <form action="/employee/new_employee" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+        
+            <div class="container-fluid d-flex">
+                
+                <div class="container-fluid d-flex flex-column w-50 p-3">
+                
+                    <div class="form-group h-50">
+                        <label class="fw-bold" for="lastname">Nom</label>
+                        {{ form.employee_lastname }}
+
+                        {% if form.employee_lastname.errors %} <!-- If error occur with the field, display the erros -->
+                             {{ form.employee_lastname.errors }}
+                        {% endif %}
+                    </div>
+                
+                </div>
+    
+                <div class="d-flex flex-column w-50 p-3" >
+                
+                    <div class="form-group ">
+                        <label class="fw-bold" for="firstname">Prénom</label>
+                        {{ form.employee_firstname }}
+
+                        {% if form.employee_firstname.errors %} <!-- If error occur with the field, display the erros -->
+                            {{ form.employee_firstname.errors }}
+                        {% endif %}
+                    </div>
+                
+                </div>
+                
+            </div>
+        
+            <div class="container">
+                
+                <div class="form-group my-2 px-3">
+                    <label class="fw-bold" for="email">Email</label>
+                    {{ form.employee_email }}
+
+                    {% if form.employee_email.errors %} <!-- If error occur with the field, display the erros -->
+                            {{ form.employee_email.errors }}
+                    {% endif %}
+                </div>
+            
+                <div class="form-group my-2 px-3">
+                    <label class="fw-bold" for="role">Role</label>
+                    {{ form.role }}
+
+                    {% if form.role.errors %} <!-- If error occur with the field, display the erros -->
+                            {{ form.role.errors }}
+                    {% endif %}
+                </div>
+                
+            </div>
+        
+            <div class="d-flex flex-row justify-content-center mt-4">
+                <a class="btn btn-lg btn-secondary rounded me-5" href="/employee">Annuler</a>
+                <button class="btn btn-lg btn-success" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
+            </div>
+            
+            {% if form.non_field_errors %} <!-- If error occur with the form, display the errors -->
+                <div class="alert alert-danger mt-3" role="alert">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+        
+        </form>
+
+    </div>
+
+</main>
+    
+{% endblock %}

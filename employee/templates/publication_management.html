@@ -1,6 +1,6 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Employees Main Page : Page that displays all the current offers and enable the user to access to the applications tables pages -->
+{% block content %} <!-- Publication Manager Page : Page that displays all the publications and enable the admin to search, add, edit and delete publications -->
     
     <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
             <div></div>
@@ -9,8 +9,11 @@
     </header>
     
     <main class="container bg-light d-flex flex-column align-items-center" style="padding-top: 9%;min-height: 100vh">
-
-        <input type="text" id="search_bar" class="text-center mb-3 w-50 form-control bg-white border-info rounded" placeholder="Rechercher une offre">
+        
+        <div class="mb-3 w-50 d-flex flex-row">
+            <input type="text" id="search_bar" class="text-center form-control bg-white border-info rounded" placeholder="Rechercher une offre">
+            <a class="btn btn-success " href="/employee/new_publication">+</a>
+        </div>
     
         {% if not posts %} <!-- If there are no posts in the database -->
             
@@ -28,12 +31,15 @@
                         {{ post.title }}
                     </div>
                     
-                    <div class="card-body text-center mx-3 py-4">
+                    <div class="card-body text-center mx-3 pt-4">
                         {{ post.description }}
                     </div>
                     
-                    <div class="card-footer text-center">
-                        <a class="btn btn-success rounded w-100" href="/employee/offer_applications?postID={{ post.id }}">Voir les Candidatures</a>
+                    <p class="mt-3 text-center fst-italic">Publication créée le {{ post.creation_date }} par {{ post.created_by.employee_lastname }} {{ post.created_by.employee_firstname }}</p>
+                    
+                    <div class="card-footer d-flex justify-content-evenly">
+                        <a class="btn btn-lg btn-primary rounded" href="/employee/update_publication?postID={{ post.id }}">Modifier</a>
+                        <a class="btn btn-lg btn-danger rounded" onclick="fill_deletion_modal({{ post.id }})" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</a>
                     </div>
                 
                 </div>
@@ -42,9 +48,35 @@
             
         {% endif %}
     
+        <!-- Modal to confirm the deletion of a publication -->
+        <div class="modal fade" id="confirm_deletion_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Etes-vous sûr ? La publication et ses candidatures seront définitivement supprimés ...</h5>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <a type="submit" href="" class="btn btn-danger" id="submit_deletion">Supprimer</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    
     </main>
 
     <script>
+    
+        // This function fill automatically the id of the user into the GET variable
+        function fill_deletion_modal(postID){
+            if(postID && Number.isInteger(postID)){ // If the UserID is set and has the right format ...
+                url = "/employee/delete_publication?postID=" + postID; // Create the deletion URL
+                document.getElementById("submit_deletion").href = url; // Send the deletion url into the modal
+            }
+        }
     
         // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
         function search(){

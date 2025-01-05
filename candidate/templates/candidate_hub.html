@@ -16,7 +16,7 @@
         </div>
     
         <div class="container border p-4 alert alert-success" >
-            <p><strong>Vous avez postulé pour l'offre de {{ offer.title }}</strong></p>
+            <p><strong>Vous avez postulé pour l'offre de {{ application.job_publication.title }}</strong></p>
         </div>
     
         {% if request.user.status == 1 %} <!-- If the status == 1 : the application is still being reviewed -->

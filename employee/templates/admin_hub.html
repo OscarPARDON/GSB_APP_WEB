@@ -1,0 +1,19 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Admin main page : Menu to let the user chose which module he wants to access -->
+    
+    <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/employee/admin_hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+    
+    <main class="container bg-light d-flex flex-column align-items-center" style="padding-top: 7%;height: 100vh">
+        <h1>Menu</h1>
+        <a class="w-50 h-25 pt-5 mb-3 bg-info ps-5 fw-bold fs-5 text-white text-decoration-none" href="hub">Gérer les candidatures</a>
+        <a class="w-50 h-25 pt-5 mb-3 bg-info ps-5 fw-bold fs-5 text-white text-decoration-none" href="admin_user_management" >Gérer les utilisateurs</a>
+        <a class="w-50 h-25 pt-5 mb-3 bg-info ps-5 fw-bold fs-5 text-white text-decoration-none" href="admin_publication_management" >Gérer les publications</a>
+    
+    </main>
+    
+{% endblock %}
