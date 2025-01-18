@@ -8,7 +8,7 @@ class LoginRequiredMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        public_path = ['/', '/application_success', '/application','/candidate/login','/employee/login'] # Publicly accessible paths
+        public_path = ['/', '/application_success', '/application','/candidate/login','/employee/login', '/candidate/forgot_application_number','/candidate/forgot_password','/candidate/reset_password'] # Publicly accessible paths
         candidate_login_path = '/candidate/login' # The path to the candidates login page
         employee_login_path = '/employee/login' # The path to the employee login page
 

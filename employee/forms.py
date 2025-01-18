@@ -1,11 +1,9 @@
 from django import forms # Import Django form module
 from django.core.exceptions import ValidationError
-from django.core.validators import EmailValidator  # Import Django Email Validator
+from django.core.validators import EmailValidator, RegexValidator  # Import Django Email Validator
 from candidate.models import Application # Import the Application Model
 from employee.models import Employee
 from visitor.models import Publication
-
-
 ########################################################################################################"
 
 # Form used to by the employee login system
@@ -28,7 +26,7 @@ class NewEmployeeForm(forms.Form):
 
     employee_lastname = forms.CharField(max_length=50,widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder':"Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
-    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
     role = forms.ChoiceField(choices=[('employee','Employé'),('admin','Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee (Admin or Employee)
 
     def clean(self):
@@ -53,7 +51,7 @@ class UpdateEmployeeForm(forms.ModelForm):
 
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FIrstname of the employee
-    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
     role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
 
     def clean(self):
@@ -66,12 +64,11 @@ class UpdateEmployeeForm(forms.ModelForm):
             cleaned_data['employee_firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
         if lastname: # If a lastname value is defined
             cleaned_data['employee_lastname'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
-        if Employee.objects.filter(employee_firstname=firstname,employee_lastname=lastname).exists(): # If an employee with this name already exists ...
-            raise ValidationError("Cet employé existe déjà") # Sends an error : employee already exists
 
-        email = cleaned_data.get('employee_email') # Get the employee email cleaned by the default function
-        if Employee.objects.filter(employee_email=email).exists(): # If an existing employee already uses this mail ...
-            raise ValidationError("Cet email est déjà utilisé par un employé, veuillez en renseigner un autre") # Sends an error : the email is already used
+        if (self.instance.employee_firstname != cleaned_data['employee_firstname'] or self.instance.employee_lastname != cleaned_data['employee_lastname']) and Employee.objects.filter(employee_firstname= cleaned_data['employee_firstname'],employee_lastname= cleaned_data['employee_lastname']).exists():
+            raise ValidationError("Cet employé existe déjà")  # Sends an error : an employee with this name already exists
+        if self.instance.employee_email !=  cleaned_data['employee_email'] and Employee.objects.filter(employee_email= cleaned_data['employee_email']).exists():
+            raise ValidationError("Cet emails est déjà utilisé par un employé, veuillez en renseigner un autre")  # Sends an error : the emails is already used
 
         return cleaned_data # Return the cleaned values
 
@@ -84,7 +81,7 @@ class UpdateSelfForm(forms.ModelForm):
 
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
-    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionel de l'employé"}))) # Email of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
 
     def clean(self):
         cleaned_data = super().clean() # Get the form data cleaned by the default function
@@ -96,6 +93,12 @@ class UpdateSelfForm(forms.ModelForm):
             cleaned_data['employee_firstname'] = firstname.capitalize()  # Reformat the value : first letter is set in uppercase and the rest is set in lowercase
         if lastname:
             cleaned_data['employee_lastname'] = lastname.upper()  # Reformat the value : all the text is set in uppercase
+
+        if (self.instance.employee_firstname != cleaned_data['employee_firstname'] or self.instance.employee_lastname != cleaned_data['employee_lastname']) and Employee.objects.filter(employee_firstname= cleaned_data['employee_firstname'],employee_lastname= cleaned_data['employee_lastname']).exists():
+            raise ValidationError("Cet employé existe déjà")  # Sends an error : an employee with this name already exists
+        if self.instance.employee_email !=  cleaned_data['employee_email'] and Employee.objects.filter(employee_email= cleaned_data['employee_email']).exists():
+            raise ValidationError("Cet emails est déjà utilisé par un employé, veuillez en renseigner un autre")  # Sends an error : the emails is already used
+
 
         return cleaned_data # Return the cleaned values
 
@@ -114,3 +117,21 @@ class UpdatePublicationForm(forms.ModelForm):
 
     title = forms.CharField(max_length=100, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le titre de la nouvelle publication"}))) # Title of the publication
     description = forms.CharField(max_length=500,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': "Entrez le description de la nouvelle publication",'style':'resize:none'})) # Description of the publication
+
+# Form used to change the password of an employee
+class EmployeeChangePasswordForm(forms.ModelForm):
+
+    class Meta:
+        model = Employee # Model linked to the form
+        fields = ['password'] # Fields updated
+
+    password = forms.CharField(max_length=200,widget=forms.PasswordInput(attrs={'id':'password','class': 'form-control', 'placeholder': "Entrez votre nouveau mot de passe"}),validators=[RegexValidator(regex='^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$',message='Le mot de passe doit contenir au moins 8 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial')]) # New password Input
+    confirm_password = forms.CharField(max_length=200,widget=forms.PasswordInput(attrs={'id':'confirm','class': 'form-control', 'placeholder': "Confirmez votre nouveau mot de passe"})) # Confirm new password input
+
+    def clean(self):
+        cleaned_data = super().clean() # Get the form data cleaned by the default function
+        password = cleaned_data.get('password') # Get the input password
+        confirm_password = cleaned_data.get('confirm_password') # Get the input password confirmation
+
+        if password != confirm_password: # If the passwords don't match ...
+            raise ValidationError("Les mots de passe ne correspondent pas") # Send an error, the fields must match

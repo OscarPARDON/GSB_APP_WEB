@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    
+    <main>
+        
+        {% if has_multiple_applications %}
+          
+            <h1>Numéros de Candidature</h1>
+            
+            <h3>Veuillez conserver cet email</h3>
+            
+            <ol>
+            
+                {% for element in application %}
+                    <li>{{ element.job_publication.title }} : 
+                        <a href="http://localhost:8000/candidate/login?application_number={{ element.application_number }}">
+                            {{ element.application_number }}
+                        </a>
+                    </li>
+                {% endfor %}
+            
+            </ol>
+            
+        {% else %}
+            
+            <h1>Numéro de Candidature pour votre de candidature sur {{ application.0.application_number }}</h1>
+            
+            <p>
+                Veuillez conserver cet email pour 
+                <a href="http://localhost:8000/candidate/login?application_number={{ application.0.application_number }}">
+                    vous connecter
+                </a>.
+            </p>
+            
+            <h3><strong>Votre numéro de candidature : {{ application.0.application_number }}</strong></h3>
+            
+        {% endif %}
+            
+        
+        
+    </main>
+
+</body>

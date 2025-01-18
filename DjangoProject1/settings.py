@@ -88,7 +88,7 @@ WSGI_APPLICATION = 'DjangoProject1.wsgi.application' # WSGI of the applications
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': { # Default Database
-        'ENGINE': '', # Engine used by the DB
+        'ENGINE': 'django.db.backends.mysql', # Engine used by the DB
         'NAME': '', # Name of the DB
         'USER': '', # Username to connect to the DB
         'PASSWORD': '', # Password to connect to the DB
@@ -96,6 +96,14 @@ DATABASES = {
         'PORT': '', # Port to access the DB
     }
 }
+
+# SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Backend used to send emails
+EMAIL_HOST = ''  # SMTP Server address
+EMAIL_PORT = 587 # SMTP server access port
+EMAIL_USE_TLS = True # Email encryption
+EMAIL_HOST_USER = '' # Email address used
+EMAIL_HOST_PASSWORD = '' # Password for the email address
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -1,8 +1,11 @@
 import os # Import os management module
 from datetime import datetime # Import datetime module
 from django.contrib.auth.hashers import make_password # Import password creation module
+from django.core.mail import EmailMessage
 from django.db.models import Max # Import Database max request module
 from django.shortcuts import render, redirect # Shortcuts to import Django modules
+from django.template.loader import render_to_string
+from DjangoProject1 import settings
 from DjangoProject1.settings import STATICFILES_DIRS # Import variable from project settings
 from candidate.models import Application # Import Application Model
 from visitor.forms import ApplicationForm # Import Application Form
@@ -14,7 +17,7 @@ def visitorpage(request): # Default Page
     posts = Publication.objects.all() # Get all the Publications in the Database
     error = request.GET.get('error', '') # If an error is sent, get the error
 
-    return render(request, 'visitor_page.html', {'posts': posts, 'error': error}) # Call the template and pass the variables
+    return render(request, 'bodies/visitor_page.html', {'posts': posts, 'error': error}) # Call the template and pass the variables
 
 
 def application(request): # Application Page : Displays the application form & manage the data submition
@@ -59,6 +62,12 @@ def application(request): # Application Page : Displays the application form & m
             )
             insertion.save() # Save the application in the database
 
+            # Sends an email to inform that the application was successfully submitted and to communicate the application number
+            html_content = render_to_string('emails/application_confirmation_email.html',{'publication_name':insertion.job_publication.title,'application_number':insertion.application_number}) # Get the email template
+            email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER,[form.cleaned_data['email']]) # Configure the email
+            email.content_subtype = 'html' # Set the email content type to html
+            email.send(fail_silently=True) # Send the email
+
             #Files management
             path = os.path.join('', str(STATICFILES_DIRS[0]) + '/files/' + number ) # Get the path of the file storage repository
             os.mkdir(path) # Create a repository named with the application number
@@ -82,10 +91,10 @@ def application(request): # Application Page : Displays the application form & m
     else: # If no form is submitted ...
         form = ApplicationForm() # Get the form from forms.py
 
-    return render(request, 'application_form.html', {'form': form, 'postID': postID}) # Call the application form and pass the variables
+    return render(request, 'forms/application_form.html', {'form': form, 'postID': postID}) # Call the application form and pass the variables
 
 
 def application_success(request): # Successful Application Page : inform the user that the application was sucessfully sent and display the application number needed to connect
     application_number = request.GET.get('application_number', '') # Get the newly created application number
     if (application_number == '') or not (Application.objects.filter(application_number=application_number)): return redirect('/') # If the received application number is null or incorrect
-    return render(request,'application_success.html',{'application_number': application_number}) # Call the successful application template and pass the variable
+    return render(request, 'bodies/application_success.html', {'application_number': application_number}) # Call the successful application template and pass the variable

@@ -2,6 +2,18 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- User Management Page : Enable to read, search, create, edit and delete users -->
 
+    <style> 
+    
+        /* Hide the bootstrap default dropdown arrows */
+        .caret-off::before {
+            display: none; !important;
+        }
+        .caret-off::after {
+            display: none; !important;
+        }
+        
+    </style> 
+    
     <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
             <div></div>
             <div class="ms-5 ps-3"><a href="/employee/admin_hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
@@ -46,13 +58,22 @@
                         <td id="firstname" style="vertical-align: middle;">{{ user.employee_firstname }}</td>
                         <td class="text-center">{{ user.employee_email }}</td>
                         <td class="text-center">{{ user.role }}</td>
-                        <td class="text-center">
+                    
+                        <td class="d-flex flex-row align-items-center justify-content-between">
                         
                             <a href="update?userID={{ user.id }}" class="btn btn-primary">Modifier</a>
+                        
                             {% if user.id != request.user.id %} <!-- Don't display the delete button for current user himself -->
                                 <a href="" onclick="fill_deletion_modal({{ user.id }})" class="btn btn-danger ms-3" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</a>
                             {% endif %}
                         
+                            <div class="dropup">
+                                <a class="caret-off" data-bs-toggle="dropdown" ><img src="{% static "images/more.svg" %}" style="width: 50px" alt="more actions"></a>
+                                <div class='dropdown-menu dropdown-menu-right'>
+                                    <a class='dropdown-item' onclick="fill_reset_password_modal({{ user.id }})" data-bs-toggle="modal" data-bs-target="#confirm_password_reset_modal">Réinitialiser le mot de passe</a>
+                                </div>
+                            </div>
+                            
                         </td>
                     
                     </tr>
@@ -73,13 +94,31 @@
                     </div>
                     
                     <div class="modal-footer">
-                        <a type="submit" href="/employee/delete?userID=" class="btn btn-danger" id="submit_deletion">Supprimer</a>
+                        <a type="submit" href="/employee/admin_user_management" class="btn btn-danger" id="submit_deletion">Supprimer</a>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
                     </div>
                         
                 </div>
             </div>
         </div>
+    
+    <!-- Modal to confirm the password reset of an employee -->
+    <div class="modal fade" id="confirm_password_reset_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Etes vous sûr ? Un mot de passe temporaire sera créé et envoyé par mail à l'utilisateur</h5>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <a type="submit" href="/employee/admin_user_management" class="btn btn-primary" id="submit_reset">Réinitialiser</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                        
+                </div>
+            </div>
+    </div>
     
     </main>
 
@@ -91,6 +130,16 @@
             if(userID && Number.isInteger(userID)){ // If the UserID is set and has the right format ...
                 url = "/employee/delete?userID=" + userID; // Create the deletion URL
                 document.getElementById("submit_deletion").href = url; // Send the deletion url into the modal
+            }
+            
+        }
+        
+        // This function fill automatically the id of the user into the GET variable
+        function fill_reset_password_modal(userID){
+            
+            if(userID && Number.isInteger(userID)){ // If the UserID is set and has the right format ...
+                url = "/employee/reset_password?userID=" + userID; // Create the deletion URL
+                document.getElementById("submit_reset").href = url; // Send the deletion url into the modal
             }
             
         }

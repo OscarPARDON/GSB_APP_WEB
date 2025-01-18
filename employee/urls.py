@@ -19,4 +19,7 @@ urlpatterns = [
     path('new_publication', views.new_publication, name='new_publication'), # Path to create a publication
     path('delete_publication', views.delete_publication, name='delete_publication'), # Page to delete a publication
     path('update_publication', views.publication_update, name='update_publication'), # Page to update a publication
+    path('change_password', views.employee_change_password, name='employee_change_password'), # Page to change password
+    path('reset_password', views.reset_employee_password, name='employee_reset_password'), # Path to reset an employee's password
+
 ]

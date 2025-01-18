@@ -18,7 +18,7 @@
         {% if action == "new" %} <!-- Form action for the creation form -->
             <form action="/employee/new_publication" method="post" enctype="multipart/form-data">
         {% elif action == "update" %} <!-- Form action for the update form -->
-            <form action="/employee/update_publication" method="post" enctype="multipart/form-data">
+            <form action="/employee/update_publication?postID={{ postID }}" method="post" enctype="multipart/form-data">
         {% endif %}        
         
         {% csrf_token %}
@@ -51,7 +51,7 @@
                 {% if action == "new" %} <!-- Button for the creation form -->
                     <button type="submit" class="btn btn-lg btn-success">Créer</button>
                 {% elif action == "update" %} <!-- Button for the update form -->
-                    <button type="submit" class="btn btn-lg btn-success">Enregistrer</button>
+                    <button type="submit" class="btn btn-lg btn-primary">Enregistrer</button>
                 {% endif %}
             
             </div>

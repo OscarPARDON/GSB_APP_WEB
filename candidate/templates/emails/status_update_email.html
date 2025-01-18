@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <main>
+        
+        <h1>Du Nouveau à propos de votre candidature sur {{ job_offer }} !</h1>
+        
+        {% if status == '2' %} <!-- Email content if the application has been rejected -->
+            
+            <p>Notre équipe a éxaminé votre candidature</p>
+            <h3><strong>Malheurseuement, votre candidature n'a pas été retenue. Nous vous souhaitons tout de même bon courage dans votre recherche.</strong></h3>
+            <p>Vos données seront supprimées automatiquement dans 15 jours à compter d'aujourd'hui, vous pouvez aussi les
+                <a href="http://localhost:8000/candidate/login">supprimer manuellement</a> à tout moment.</p>
+            
+        {% elif status == '3' %} <!-- Email content if the application has been accepted -->
+            
+            <p>Notre équipe a éxaminé votre candidature</p>
+            <h3><strong>Félicitation, votre candidature a été retenue. Notre équipe vous contactera très prochainement pour poursuivre la démarche de recrutement.</strong></h3>
+            <p>Vos données devront être conservées pour poursuivre la démarche, cependant vous êtes toujours libre de 
+                <a href="http://localhost:8000/candidate/login">modifier ou supprimer</a> celles-ci</p>
+            
+        {% elif status == '1' %} <!-- Email content if the application verdict was canceled -->
+            
+            <p>Notre équipe a reconsidéré son verdict à propos de votre candidature</p>
+            <h3><strong>Il semble que le précédent verdict concérnant votre candidature ait été annulé. Vous serez informé si un nouveau changement se produit.</strong></h3>
+            <p>Vos données seront conservées en attendant le prochain verdict, cependant vous êtes libre de 
+                <a href="http://localhost:8000/candidate/login">modifier ou supprimer</a> celles-ci à tout moment</p>
+        
+        {% endif %}
+    
+    </main>
+
+</body>

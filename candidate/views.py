@@ -1,10 +1,15 @@
 import os # Import Python Operating System Management Module
 from pathlib import Path # Import File Path Management Module
+from secrets import token_hex
 from django.conf import settings # Import Settings Variables
 from django.contrib.auth import authenticate, login, logout # Import Django Authentication Module
+from django.contrib.auth.hashers import make_password
+from django.core.mail import EmailMessage
 from django.http import Http404, FileResponse # Import Django HTTP Module
 from django.shortcuts import render, redirect, get_object_or_404 # Shortcut to import some Django Modules
-from .forms import ApplicationLoginForm, ApplicationUpdateForm # Import the Login and Update Forms
+from django.template.loader import render_to_string
+from .forms import ApplicationLoginForm, ApplicationUpdateForm, \
+    CandidateEmailForm, ApplicationNumberForm, CandidateChangePasswordForm  # Import the Login and Update Forms
 from .models import Application # Import the Application Model
 ######################################################################################################################
 
@@ -36,7 +41,7 @@ def candidate_login(request): # This views manages the candidates login process
         else : # If no application number is passed in the URL
             form = ApplicationLoginForm() # Set New login form
 
-    return render(request, 'candidate_login.html', {'form': form}) # Call the login page
+    return render(request, 'forms/candidate_login.html', {'form': form}) # Call the login page
 
 
 def candidate_logout(request): # View to log out the user
@@ -61,7 +66,7 @@ def candidate_hub(request): # This view manages the candidate's main page
         else: # No file is found ...
             file_data[filename_base] = 0  # Set the test value to 1 : the file doesn't exist, or it is inaccessible
 
-    return render(request,'candidate_hub.html',{'application':application,'file_data':file_data}) # Call the candidate's main page
+    return render(request, 'bodies/candidate_hub.html', {'application':application, 'file_data':file_data}) # Call the candidate's main page
 
 def show_file(request): # The view manages the access to the candidate's files
 
@@ -99,6 +104,12 @@ def candidate_delete(request): # This views manages the application deletion
 
     # Delete the application from the database
     application = get_object_or_404(Application, application_number=application_number) # Get the application or send 404 error if it's not found in the databse
+
+    html_content = render_to_string('emails/deletion_confirmation_email.html',{'job_offer':application.job_publication.title}) # Get the Email Template
+    email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER, [application.candidate_mail]) # Configure the Email
+    email.content_subtype = 'html' # Set the email content type to HTML
+    email.send(fail_silently=True) # Send the Email
+
     logout(request) # Log the user out before deletion
     application.delete() # Delete the application from the database
     return redirect('/')  # Redirection to the visitor page
@@ -133,4 +144,66 @@ def candidate_update(request): # This view manage the modification of an applica
     else: # No form data is received
         form = ApplicationUpdateForm(instance=application) # Get the prefilled application update form
 
-    return render(request, 'update_application_form.html', {'form': form}) # Call the update form page
+    return render(request, 'forms/update_application_form.html', {'form': form}) # Call the update form page
+
+def forgot_application_number(request): # This function manage the forgot application number form
+    if request.method == "POST": # If form data is received
+        form = CandidateEmailForm(request.POST) # Get the form data
+        if form.is_valid(): # If the data is valid ...
+            if Application.objects.filter(candidate_mail=form.cleaned_data['email']).exists(): # If the email is linked to any application ...
+                application = Application.objects.filter(candidate_mail=form.cleaned_data['email']) # Get the application corresponding to the email
+
+                has_multiple_applications = 0
+                if len(application) > 1 :
+                    has_multiple_applications = 1
+                html_content = render_to_string('emails/forgot_application_number_email.html',{'application': application,'has_multiple_applications':has_multiple_applications}) # Get the email template
+                email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER, [form.cleaned_data['email']]) # Configure the email
+                email.content_subtype = 'html' # Set the email content type to html
+                email.send(fail_silently=True) # Send the email
+
+            return render(request,'bodies/sent_confirmation.html',{'content':'numéro de candidature','email':form.cleaned_data['email']}) # Call the email confirmation page
+    else: # If no form data is received ...
+        form = CandidateEmailForm() # Create an empty form
+    return render(request, 'forms/candidate_email_form.html', {'form':form}) # Call the email form
+
+def forgot_password(request): # This function manages the forgot password form
+    if request.method == "POST": # If form data is received ...
+        form = ApplicationNumberForm(request.POST) # Get the form data
+        if form.is_valid(): # If the form data is valid ...
+            if Application.objects.filter(application_number=form.cleaned_data['application_number']).exists(): # If the application number exists
+                application = Application.objects.get(application_number=form.cleaned_data['application_number']) # Get the application
+                password_reset_token = token_hex(32) # Create a password reset token for the application
+                application.password_reset_token = password_reset_token # Set the reset token password
+                application.save() # Save the reset token password token in the database
+
+                html_content = render_to_string('emails/reset_password_email.html',{'password_reset_token': password_reset_token,'application_number': form.cleaned_data['application_number'],'job_offer':application.job_publication.title}) # Get the email template
+                email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER,[application.candidate_mail]) # Configure the email
+                email.content_subtype = 'html' # Set the email content type to html
+                email.send(fail_silently=True) # Send the email
+            return render(request,'bodies/sent_confirmation.html',{'content':'lien de réinitialisation du mot de passe'}) # Call the email confirmation page
+    else: # If no from data is received ...
+        form = ApplicationNumberForm() # Create an empty form
+    return render(request,'forms/candidate_application_number_form.html',{'form':form}) # Call the application number form
+
+def reset_password(request): # This function manage the candidate password reset
+    application_number = request.GET.get('application_number','') # Get the application number in the URL or nothing if none is passed
+    token = request.GET.get('token','') # Get the reset token in the URL or nothing if none is passed
+    if Application.objects.filter(application_number=application_number).exists() and Application.objects.get(application_number=application_number).password_reset_token is not None: # If the application number exists and a reset token was created for this application ...
+        application = Application.objects.get(application_number=application_number) # Get the application
+        if application.password_reset_token == token: # If the token match the token in the database ...
+            if request.method == "POST": # If form data is received ...
+                form = CandidateChangePasswordForm(request.POST) # Get the form data
+                if form.is_valid(): # If the form data is received ...
+                    application.password_reset_token = None # Delete the password reset token as it is used
+                    application.candidate_password = make_password(form.cleaned_data['password']) # Set the new password
+                    application.save() # Save new password in the database
+
+                    html_content = render_to_string('emails/confirm_password_change_email.html',{'job_offer':application.job_publication.title}) # Get the email template
+                    email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER,[application.candidate_mail]) # Configure the email
+                    email.content_subtype = 'html' # Set the email content type to html
+                    email.send(fail_silently=True) # Send the email
+                    return redirect('/candidate/login') # Redirect to the user page
+            else: # If no form data is received
+                form = CandidateChangePasswordForm() # Create an empty form
+            return render(request,'forms/candidate_change_password_form.html',{'form':form,'application_number':application.application_number,'token':application.password_reset_token}) # Call the password change form
+    return redirect('/candidate/login') # If the application number or the token is not valid, redirect to the login page

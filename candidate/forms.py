@@ -18,7 +18,7 @@ class ApplicationUpdateForm(forms.ModelForm):
 
     candidate_firstname = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre prénom'})) # Input candidate's firstname
     candidate_lastname = forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre prénom'})) # Input candidate's lastname
-    candidate_mail = forms.EmailField(max_length=100,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder': 'Entrez votre email'})) # Input candidate's mail
+    candidate_mail = forms.EmailField(max_length=100,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder': 'Entrez votre emails'})) # Input candidate's mail
     candidate_phone = forms.CharField(required=False,min_length=10,max_length=10, widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'Entrez votre numéro de téléphone'}),validators=[RegexValidator(regex="^0[1-9](\d{2}){4}$",message="Le numéro de téléphone doit contenir exactement 10 chiffres.")]) # Input candidate's phone number
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class': 'form-control-file', 'accept': 'image/*,.pdf'}))  # Input candidate's CV file
     cover_letter = forms.FileField(required=False,widget=forms.FileInput(attrs={'class': 'form-control-file', 'accept': '.pdf,.txt,.doc,.docx'}))  # Input candidate's cover letter file
@@ -59,3 +59,25 @@ class ApplicationUpdateForm(forms.ModelForm):
                 raise forms.ValidationError("Le fichier ne doit pas être vide et être inférieur à 30Mo")  # Sends the error
 
         return cleaned_data
+
+# Form used to collect the user email
+class CandidateEmailForm(forms.Form):
+    email = forms.EmailField(max_length=100,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder': 'Entrez votre email'})) # Input User Email
+
+# Form used to collect the user Application Number
+class ApplicationNumberForm(forms.Form):
+    application_number = forms.CharField(max_length=11,widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez votre numéro de candidature'}),validators=[RegexValidator(regex='^\d{11}$',message="Numéro de candidature incorrect")]) # Input Application Number
+
+# Form used by the candidate to change his password
+class CandidateChangePasswordForm(forms.Form):
+
+    password = forms.CharField(max_length=200,widget=forms.PasswordInput(attrs={'id':'password','class': 'form-control', 'placeholder': "Entrez votre nouveau mot de passe"}),validators=[RegexValidator(regex='^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$',message='Le mot de passe doit contenir au moins 8 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial')]) # Password input
+    confirm_password = forms.CharField(max_length=200,widget=forms.PasswordInput(attrs={'id':'confirm','class': 'form-control', 'placeholder': "Confirmez votre nouveau mot de passe"})) # Password Confirmation Input
+
+    def clean(self):
+        cleaned_data = super().clean() # Get the form data cleaned by the default cleaning function
+        password = cleaned_data.get('password') # Get the input password
+        confirm_password = cleaned_data.get('confirm_password') # Get the input password confirmation
+
+        if password != confirm_password: # If the password doesn't match the confirmation ...
+            raise ValidationError("Les mots de passe ne correspondent pas") # Send an error : the two fields must match

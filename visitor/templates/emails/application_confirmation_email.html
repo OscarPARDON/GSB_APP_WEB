@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <main>
+        
+        <h1>Nous avons bien reçu votre candidature pour le poste de {{ publication_name }}</h1>
+        
+        <p>Vous serez informé en cas d'évolution de votre candidature</p>
+        
+        <h3><strong>Votre numéro de candidature à conserver : {{ application_number }}</strong></h3>
+        
+        <p>
+            En attendant le verdict, vos données sont conservées pour le bon déroulement du processus de recrutement. Cependant vous êtes libre de 
+            <a href="http://localhost:8000/candidate/login?application_number={{ application_number }}">supprimer ou modifier</a> vos données à tout moment.
+        </p>
+        
+    </main>
+
+</body>
