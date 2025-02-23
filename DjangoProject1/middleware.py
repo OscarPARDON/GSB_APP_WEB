@@ -16,14 +16,21 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated and request.path not in public_path:
             return redirect('/') # Redirection to the visitor homepage
 
+        if hasattr(request.user,"application_number") and request.path in ["/chat/employee","/chat/new_interview","/chat/delete_interview"]:
+            return redirect("/")
+        if hasattr(request.user,"employee_email") and request.path in ["/chat/candidate","/chat/update_interview_status"]:
+            return redirect("/")
+        if request.path in ["/chat/employee","/chat/new_interview","/chat/delete_interview"] and hasattr(request.user,"role") and request.user.role == "employee":
+            return redirect("/employee/hub")
+
         # Bypass the login page if the user is already authenticated
         if (request.path == candidate_login_path) and (request.user.is_authenticated) and (hasattr(request.user, 'application_number')) :
             return redirect('/candidate/hub') # Redirection to the candidates homepage
         elif (request.path == employee_login_path) and (request.user.is_authenticated) and (hasattr(request.user, 'employee_email')) :
             if request.user.role == 'employee' : # If the authenticated user is an employee...
-                return redirect('/employee/hub') # Redirect to the employee homepage
+                return redirect('/employee/application_management') # Redirect to the employee homepage
             elif request.user.role == 'admin' : # If the authenticated user is an admin
-                return redirect('/employee/admin_hub') # Redirect to the admin homepage
+                return redirect('/employee/hub') # Redirect to the admin homepage
 
         # Restrict authenticated candidates from accessing the employees section
         if hasattr(request.user, 'application_number'): # If the user is a candidate ...

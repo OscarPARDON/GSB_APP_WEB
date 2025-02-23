@@ -36,18 +36,19 @@ class ApplicationForm(forms.Form):
         cv=cleaned_data.get('cv') # # Get the cv cleaned by the default function
         cover_letter = cleaned_data.get('cover_letter') # Get the cover letter cleaned by the default function
 
-        # CV File Extension Verification
-        cv_allowed_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp','.svg','.pdf'] # List of allowed extensions for the CV file
-        if os.path.splitext(cv.name)[1].lower() not in cv_allowed_extensions: # Check if the uploaded file's extension is in the list
-            raise ValidationError(f"L'extension n'est pas autorisée. Uniquement les fichiers PDF ou images sont acceptés") # Send error if the extension is not in the list
+        if cv and cover_letter:
+            # CV File Extension Verification
+            cv_allowed_extensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp','.svg','.pdf'] # List of allowed extensions for the CV file
+            if os.path.splitext(cv.name)[1].lower() not in cv_allowed_extensions: # Check if the uploaded file's extension is in the list
+                raise ValidationError(f"L'extension n'est pas autorisée. Uniquement les fichiers PDF ou images sont acceptés") # Send error if the extension is not in the list
 
-        # Cover Letter Extension Verification
-        cover_letter_allowed_extensions = ['.pdf','.txt','.doc','.docx'] # List of allowed extensions for the cover letter file
-        if os.path.splitext(cover_letter.name)[1].lower() not in cover_letter_allowed_extensions: # Check if the uploaded file's extension is in the list
-            raise ValidationError(f"L'extension n'est pas autorisée. Uniquement les fichiers texte et PDF sont acceptés") # Send error if the extension is not in the list
+            # Cover Letter Extension Verification
+            cover_letter_allowed_extensions = ['.pdf','.txt','.doc','.docx'] # List of allowed extensions for the cover letter file
+            if os.path.splitext(cover_letter.name)[1].lower() not in cover_letter_allowed_extensions: # Check if the uploaded file's extension is in the list
+                raise ValidationError(f"L'extension n'est pas autorisée. Uniquement les fichiers texte et PDF sont acceptés") # Send error if the extension is not in the list
 
-        # File Size Verification
-        if not (cv and cover_letter) or (cv.size == None or cv.size > 30000000) or (cover_letter.size == None or cover_letter.size > 30000000) : # If the CV or Cover letter file is bigger than 30Mo ...
-            raise forms.ValidationError("Le fichier ne doit pas être vide et être inférieur à 30Mo") # Sends the error
+            # File Size Verification
+            if (cv.size == None or cv.size > 30000000) or (cover_letter.size == None or cover_letter.size > 30000000) : # If the CV or Cover letter file is bigger than 30Mo ...
+                raise forms.ValidationError("Le fichier ne doit pas être vide et être inférieur à 30Mo") # Sends the error
 
         return cleaned_data

@@ -27,10 +27,15 @@ class NewEmployeeForm(forms.Form):
     employee_lastname = forms.CharField(max_length=50,widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder':"Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
     employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
-    role = forms.ChoiceField(choices=[('employee','Employé'),('admin','Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee (Admin or Employee)
+    role = forms.ChoiceField(choices=[('employee','Employé'),('admin','Admin'),('manager','Manager')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee (Admin or Employee)
 
     def clean(self):
         cleaned_data = super().clean() # Get the form data cleaned by the default clean function
+
+        email = cleaned_data.get('employee_email')
+
+        if Employee.objects.filter(employee_email=email).exists():
+            raise ValidationError("Un autre utilisateur utilise déja cet email.")
 
         firstname = cleaned_data.get('employee_firstname')  # Get the employee firstname cleaned by the default function
         lastname = cleaned_data.get('employee_lastname')  # Get the employee lastname cleaned by the default function
@@ -52,7 +57,7 @@ class UpdateEmployeeForm(forms.ModelForm):
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FIrstname of the employee
     employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
-    role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
+    role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin'),('manager','Manager')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
 
     def clean(self):
         cleaned_data = super().clean() # Get the form data cleaned by the default function

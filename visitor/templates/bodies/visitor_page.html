@@ -3,98 +3,161 @@
 {% block content %} <!-- Main page : Display all the job offers and give the access to the login pages -->
 
     <style>
-        .card{
-            scroll-margin-top: 110px ;
-        }
-    </style>
-
-    <header class="bg-secondary border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2">
-    
-    <div>
-        <a href="/">
-            <img src="{% static 'images/gsb_logo.png' %}" style="width: 130px" alt="Logo GSB">
-        </a>
-    </div>
         
-    <div class="position-absolute" style="top: 50%; right: 20px; transform: translateY(-50%);">
-        <button class="btn btn-primary rounded" data-bs-toggle="modal" data-bs-target="#login_modal">
-            Connexion
-        </button>
-    </div>
+        main{
+            @media (min-width: 768px) {
+                margin-top: 17vh
+            }
+            @media (max-width: 767px) {
+                margin-top: 24vh; 
+            }
+        }
+        
+        .cnx-btn {
+
+            @media (min-width: 768px) {
+                position: absolute;
+                top: 50%;
+                right: 20px;
+                transform: translateY(0%);
+            }
+                    
+            @media (max-width: 767px) {
+                margin-top: 1rem; 
+            }
+        }
+
+        .card{
+            background-color: whitesmoke ;
+            height: 50vh;
+        }
+
+        .card-header {
+            height: 20%;
+            max-width: 100%;
+            white-space: nowrap;     /* Empêche le texte de passer à la ligne */
+            overflow: hidden;        /* Cache le texte qui dépasse */
+            text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+        }
+
+        .card-body::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .card-body {
+            height: 80%;
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+            overflow: scroll;
+        }
+        
+        .modal-footer{
+            border-top: whitesmoke !important;
+            padding: 0px !important;
+        }
+        
+    </style>
     
-</header>
-    
-    <main class="container bg-light d-flex flex-column align-items-center pb-5" style="padding-top: 8%">
-    
-        <h1 class="fw-bold bg-info text-white rounded p-4 mb-3">Nos offres d'emplois :</h1>
-    
-        {% if not posts %} <!-- If there are no posts in the database -->
-            
-            <div class="container mt-5 p-5 bg-info rounded"> <!-- Display an empty tab message -->
-                <h3 class="text-center text-white">Aucune offre pour le moment</h3>
+    <header class="fixed-top py-3 dark-bg container-fluid" >
+        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between">
+            <div class="text-center flex-grow-1">
+                <a href="/">
+                    <img src="{% static 'images/gsb_logo.png' %}" style="width: 130px" alt="Logo GSB">
+                </a>
             </div>
-            
-        {% else %} <!-- If there are posts to display -->
-            
-            {% for post in posts %} <!-- Display all the posts -->
-                
-                <div class="card bg-light my-3" style="height:75vh;width: 50vw" id="{{ forloop.counter0 }}">
-                
-                    <div class="card-header text-center bg-secondary fs-3 fw-bold text-white">
-                        {{ post.title }}
-                    </div>
-                    
-                    <div class="card-body text-center py-4 mx-3">
-                        {{ post.description }}
-                    </div>
-                    
-                    <div class="card-footer text-center">
-                        <a class="w-25 btn btn-success rounded" href="/application?postID={{ post.id }}">Postuler</a>
-                        <a href="#{{ forloop.counter }}" class="btn btn-info rounded w-25 ms-4 text-white">Suivant</a>
-                    </div>
-                
-                </div>
-                
-            {% endfor %}
-            
-        {% endif %}
+
+            <div class="cnx-btn">
+                <button class="btn rounded secondary-btn" data-bs-toggle="modal" data-bs-target="#login_modal" >
+                    <img src="{% static 'images/login.svg' %}" style="width: 20px"  alt="Login icon">
+                    Connexion
+                </button>
+            </div>
+
+        </div>
+    </header>
+    
+    <main class="d-flex flex-column align-items-center">
+    
+        <h1 class="fw-bold rounded p-4 mb-3 dark-txt">Nos offres d'emplois :</h1>
+
+        <div class="container-fluid">
+            <div class="row g-4 d-flex justify-content-center">
+
+                    {% if not posts %} <!-- If there are no posts in the database -->
+
+                        <div class="container mt-5 p-5 rounded"> <!-- Display an empty tab message -->
+                            <h3 class="text-center dark-txt">Aucune offre pour le moment</h3>
+                        </div>
+
+                    {% else %} <!-- If there are posts to display -->
+
+                        {% for post in posts %} <!-- Display all the posts -->
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+                                <div class="card my-3 round" >
+
+                                    <div class="card-header dark-bg text-center fs-3 fw-bold text-white">
+                                        {{ post.title }}
+                                    </div>
+
+                                    <div class="card-body text-center mb-2 mx-3 dark-txt" style="font-family: 'arial', sans-serif; !important; font-weight: lighter">
+                                        {{ post.description }}
+                                    </div>
+                                    
+                                    <a class="card-footer dark-bg text-center px-5 btn secondary-btn py-3 fw-bold" href="/application?postID={{ post.id }}">Postuler</a>
+                                    
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+            </div>
+        </div>
     
         <!-- Modal to chose between employees and candidates login page -->
-        <div class="modal" id="login_modal" tabindex="-1">
-          <div class="modal-dialog">
+        <div class="modal fade" id="login_modal" tabindex="-1">
+          <div class="modal-dialog"> 
             <div class="modal-content">
                 
-              <div class="modal-header">
-                <h5 class="modal-title">Vous Etes ... ?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <div class="modal-header dark-bg">
+                <h5 class="modal-title text-white">Vous Êtes ... ?</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
                 
-              <div class="modal-body">
-                <div class="d-flex flex-row align-items-center">
+              <div class="modal-body secondary-bg">
+                <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                     
                   <div class="container d-flex flex-column align-items-center">
-                    <a class="btn btn-danger rounded p-5" href="/employee/login">Espace Employé</a>
+                    <a class="btn rounded p-4 p-md-5 secondary-btn w-100" href="/employee/login">ESPACE EMPLOYÉ</a>
                   </div>
                     
-                    <div>
-                        <u class="fw-bold">OU</u>
-                    </div>
+                  <div class="d-none d-md-block">
+                    <u class="fw-bold">OU</u>
+                  </div>
+                  
+                  <div class="d-md-none text-center my-2">
+                    <u class="fw-bold">OU</u>
+                  </div>
                     
                   <div class="container d-flex flex-column align-items-center">
-                    <a class="btn btn-primary rounded p-5" href="/candidate/login">Espace Candidat</a>
+                    <a class="btn rounded p-4 p-md-5 secondary-btn w-100" href="/candidate/login">ESPACE CANDIDAT</a>
                   </div>
                     
                 </div>
                   
               </div>
-                
-              <div class="modal-footer d-flex justify-content-center">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-              </div>
-                
-            </div>
-          </div>
-        </div>
+        
+      <div class="modal-footer d-flex justify-content-center" style="background-color: whitesmoke">
+        <button type="button" class="btn fw-bold dark-txt" data-bs-dismiss="modal">Annuler</button>
+      </div>
+        
+    </div>
+  </div>
+</div>
     
         {% if error %} <!-- If an error is sent to the page, display the error -->
             <script>alert('{{ error }}');</script> <!-- Javascript script to alert the user in case of an error -->

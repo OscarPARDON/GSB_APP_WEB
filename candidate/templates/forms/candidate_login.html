@@ -1,14 +1,23 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Candidate Login page : Login Form, mandatory to access any private_page -->
+
+    <style>
     
-    <main class="bg-light">
+        .small_link{
+            font-size: smaller;
+            color: black;
+        }
+        
+    </style>
+    
+    <main class="dark-bg">
     
         <div class="container d-flex justify-content-center align-items-center vh-100">
         
             <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
             
-                <h3 class="text-center mb-4">Espace Candidat</h3>
+                <h3 class="text-center mb-4" style="color: #111d4a">Espace Candidat</h3>
             
                 <div class="text-center mt-1 mb-3">
                     <a href="/"><img src="{% static "images/gsb_logo.png" %}" style="width: 150px" alt="Logo GSB"></a>
@@ -19,23 +28,23 @@
                 
                     <!-- Application Number -->
                     <div class="mb-3">
-                        <label for="application_number" class="form-label">Numéro de candidature</label>
+                        <label for="application_number" class="form-label" style="color: #111d4a">Numéro de candidature</label>
                         {{ form.application_number }}
 
-                        <a class="ms-1 mt-1" href="/candidate/forgot_application_number">Numéro de candidature perdu ?</a>
+                        <a class="ms-1 mt-1 small_link" href="/candidate/forgot_application_number">Numéro de candidature perdu ?</a>
                     </div>
                 
                     <!-- Password -->
                     <div class="mb-3">
-                        <label for="password" class="form-label">Mot de passe</label>
+                        <label for="password" class="form-label" style="color: #111d4a">Mot de passe</label>
                         {{ form.password }}
                         
-                        <a class="ms-1 mt-1" href="/candidate/forgot_password">Mot de passe oublié ?</a>
+                        <a class="ms-1 mt-1 small_link" href="/candidate/forgot_password">Mot de passe oublié ?</a>
                     </div>
                 
                     <!-- Connexion Button -->
                     <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                        <button type="submit" class="btn secondary-btn">Se connecter</button>
                     </div>
                 
                     <!-- Error Message -->

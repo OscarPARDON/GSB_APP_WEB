@@ -1,0 +1,107 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Admin main page : Menu to let the user chose which module he wants to access -->
+    
+    <header class="dark-bg border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+    
+    <main class="container d-flex flex-column align-items-center" style="margin-top: 8%">
+
+        <div class="mb-3 w-50 d-flex flex-row">
+            <input type="text" id="search_bar" class="text-center form-control dark-border rounded" placeholder="Rechercher une offre">
+        </div>
+
+        {% if not publications %}
+            <div class="container mt-5 p-5 drk-bg rounded">
+                <h3 class="text-center dark-txt"> Aucune offre n'a été publiée</h3>
+            </div>
+        {% else %}
+            <div class="container mt-5 rounded" style="display: none" id="emptySearch">
+                <h3 class="text-center dark-txt"> Aucune publication ne correspond à la recherche</h3>
+            </div>
+            {% for publication in publications %}
+                <div class="card mt-3 w-75">
+                    <div class="card-header dark-bg text-white text-center"><h3>{{ publication.title }}</h3></div>
+                    <div class="card-body">
+                    {% if publication.noAvailableApplications %}
+                        <div class="mt-5 pb-5 fs-5 fw-bold dark-txt text-center">Aucune candidature n'a encore été validée</div>
+                    {% else %}
+                        <table class="table border table-hover">
+                            <thead class="table-light">
+                                <tr class="table-header align-middle ">
+                                    <th scope="col" class="dark-txt" style="width: 15%">N° De Candidature</th>
+                                    <th scope="col" class="dark-txt" style="width: 15%">Nom</th>
+                                    <th scope="col" class="dark-txt" style="width: 15%">Prénom</th>
+                                    <th scope="col" class="dark-txt" style="width: 20%">Email</th>
+                                    <th scope="col" class="dark-txt" style="width: 15%">N° De Téléphone</th>
+                                    <th scope="col" style="width: 20%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for application in publication.applications %}
+                                        <tr class="align-middle">
+                                            <th class="dark-txt" scope="row">{{ application.application_number }}</th>
+                                            <td class="dark-txt">{{ application.candidate_lastname }}</td>
+                                            <td class="dark-txt">{{ application.candidate_firstname }}</td>
+                                            <td class="dark-txt">{{ application.candidate_mail }}</td>
+                                            <td class="dark-txt">{{ application.candidate_phone }}</td>
+                                            <td class="text-end">
+                                                <a class="btn dark-bg" href="/chat/employee?candidateId={{ application.application_number }}">
+                                                    <p class="badge text-bg-light mb-0">{{ application.unread_count }}</p>
+                                                    <img src="{% static "images/msg.svg" %}" style="width: 30px" alt="">
+                                                </a></td>
+                                        </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}        
+        
+    </main>
+    
+
+    <script>
+
+        // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
+        function search(){
+
+            // Get the values
+            search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the value of the search field
+            offers = Array.from(document.getElementsByClassName("card")); // Get all the posts
+            offers_title = Array.from(document.getElementsByClassName("card-header")); // Get all the posts titles
+            emptySearch = true;
+
+            offers.forEach((offer, index) => { // Verify that the post title match with the search value for all the posts
+
+                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){ // If the search value doesn't match with the title
+                    offer.style.display = 'none'; // Make the post disappear
+                }
+
+                else{ // The search value match with the title
+                    offer.style.display = 'block'; // Makes the post appear
+                    emptySearch = false
+                }
+                
+            })
+
+            if(emptySearch){
+                document.getElementById("emptySearch").style.display = 'block';
+            }
+            else{
+                document.getElementById("emptySearch").style.display = 'none';
+            }
+        }
+
+        document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value of the search field changes
+
+
+    </script>
+
+
+{% endblock %}

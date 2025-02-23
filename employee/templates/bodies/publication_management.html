@@ -2,51 +2,102 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Publication Manager Page : Page that displays all the publications and enable the admin to search, add, edit and delete publications -->
     
-    <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+    <style>
+
+        .card{
+            background-color: whitesmoke ;
+            height: 50vh;
+        }
+
+        .card-header {
+            height: 20%;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden !important;        /* Forcer l'overflow hidden */
+            text-overflow: ellipsis !important; /* Forcer l'ellipsis */
+        }
+        
+        .modal-content {
+            background-color: whitesmoke;
+        }
+
+        .card-body::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .card-body {
+            height: 80%;
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+            overflow: scroll;
+        }
+        
+        .modal-footer, .card-footer{
+            background-color: whitesmoke !important;
+            border-top: whitesmoke !important;
+        }
+        
+    </style>
+    
+    
+    <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2" >
             <div></div>
-            <div class="ms-5 ps-3"><a href="{%if request.user.role == 'admin'%}/employee/admin_hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ms-5 ps-3"><a href="{%if request.user.role == 'admin'%}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
     
-    <main class="container bg-light d-flex flex-column align-items-center" style="padding-top: 9%;min-height: 100vh">
+    <main class="d-flex flex-column align-items-center" style="padding-top: 9%;">
         
         <div class="mb-3 w-50 d-flex flex-row">
-            <input type="text" id="search_bar" class="text-center form-control bg-white border-info rounded" placeholder="Rechercher une offre">
-            <a class="btn btn-success " href="/employee/new_publication">+</a>
+            <input type="text" id="search_bar" class="text-center form-control dark-border rounded" placeholder="Rechercher une offre">
+            <a class="btn secondary-btn " href="/employee/new_publication">+</a>
         </div>
     
-        {% if not posts %} <!-- If there are no posts in the database -->
-            
-            <div class="container mt-5 p-5 bg-info rounded">
-                <h3 class="text-center text-white"> Aucune offre n'a été publiée</h3>
+        <div class="container-fluid">
+            <div class="row g-4 d-flex justify-content-center">
+
+                    {% if not posts %} <!-- If there are no posts in the database -->
+
+                        <div class="container mt-5 p-5 rounded"> <!-- Display an empty tab message -->
+                            <h3 class="text-center dark-txt">Aucune offre pour le moment</h3>
+                        </div>
+
+                    {% else %} <!-- If there are posts to display -->
+
+                        {% for post in posts %} <!-- Display all the posts -->
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+                                <div class="card my-3 round">
+
+                                    <div class="card-header {% if post.archived == 1 %}bg-danger{% else %}dark-bg{% endif %} text-center fs-3 px-5 fw-bold text-white">
+                                        {{ post.title }}
+                                        {% if post.archived == 0 %}
+                                            <a href="#" onclick="fill_archive_modal({{ post.id }})" data-bs-toggle="modal" data-bs-target="#confirm_archive_modal">
+                                                <img src="{% static 'images/archive.svg' %}" alt="Archiver cette publication" style="width: 40px; position: absolute; right: 10px; top: 6%; transform: translateY(-50%);">
+                                            </a>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="card-body text-center mb-2 mx-3 dark-txt" style="font-family: 'arial', sans-serif; !important; font-weight: lighter">
+                                        {{ post.description }}
+                                    </div>
+                                    <p class="align-end text-center fst-italic mb-0 fs-7" style="opacity: 50%;">Publication créée le {{ post.creation_date }} par {{ post.created_by.employee_lastname }} {{ post.created_by.employee_firstname }}</p>
+                                    
+                                    <div class="card-footer d-flex flex-row justify-content-evenly">
+                                        <a class="btn btn-lg {% if post.archived == 1 %}btn-danger{% else %}secondary-btn{% endif %} rounded" href="/employee/update_publication?postID={{ post.id }}">Modifier</a>
+                                        <a class="btn btn-lg {% if post.archived == 1 %}btn-danger{% else %}secondary-btn{% endif %} rounded" onclick="fill_deletion_modal({{ post.id }})" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</a>
+                                    </div>                                    
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
             </div>
-            
-        {% else %} <!-- If there are posts to display -->
-            
-            {% for post in posts %} <!-- Display all the posts -->
-                
-                <div class="card bg-light my-3" id="offer" style="width: 50vw">
-                
-                    <div class="card-header text-center bg-secondary text-white fs-3 fw-bold text-white">
-                        {{ post.title }}
-                    </div>
-                    
-                    <div class="card-body text-center mx-3 pt-4">
-                        {{ post.description }}
-                    </div>
-                    
-                    <p class="mt-3 text-center fst-italic">Publication créée le {{ post.creation_date }} par {{ post.created_by.employee_lastname }} {{ post.created_by.employee_firstname }}</p>
-                    
-                    <div class="card-footer d-flex justify-content-evenly">
-                        <a class="btn btn-lg btn-primary rounded" href="/employee/update_publication?postID={{ post.id }}">Modifier</a>
-                        <a class="btn btn-lg btn-danger rounded" onclick="fill_deletion_modal({{ post.id }})" data-bs-toggle="modal" data-bs-target="#confirm_deletion_modal">Supprimer</a>
-                    </div>
-                
-                </div>
-                
-            {% endfor %}
-            
-        {% endif %}
+        </div>
     
         <!-- Modal to confirm the deletion of a publication -->
         <div class="modal fade" id="confirm_deletion_modal" tabindex="-1">
@@ -54,12 +105,32 @@
                 <div class="modal-content">
                     
                     <div class="modal-body">
-                        <h5 class="modal-title">Etes-vous sûr ? La publication et ses candidatures seront définitivement supprimés ...</h5>
+                        <h5 class="modal-title">Êtes-vous sûr ? La publication et ses candidatures seront définitivement supprimés ...</h5>
                     </div>
                     
-                    <div class="modal-footer">
-                        <a type="submit" href="" class="btn btn-danger" id="submit_deletion">Supprimer</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <div class="modal-footer d-flex flex-column align-items-center">
+                        <a type="submit" href="" class="btn secondary-btn w-50" id="submit_deletion">Supprimer</a>
+                        <button type="button" class="btn m-0 w-50" data-bs-dismiss="modal">Annuler</button>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+    
+    <!-- Modal to confirm the deletion of a publication -->
+        <div class="modal fade" id="confirm_archive_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Êtes-vous sûr ? La publication sera définitivement archivée…</h5>
+                        <p>Seules les candidatures associées à cette publication ayant été validées seront archivées, les autres seront supprimées.
+                            <br>Si la publication ne contient aucune candidature après cette opération, elle sera supprimée.</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex flex-column align-items-center">
+                        <a href="" class="btn secondary-btn w-50" id="submit_archive">Archiver</a>
+                        <button type="button" class="btn m-0 w-50" data-bs-dismiss="modal">Annuler</button>
                     </div>
                         
                 </div>
@@ -78,26 +149,27 @@
             }
         }
     
+        // This function fill automatically the id of the user into the GET variable
+        function fill_archive_modal(postID){
+            if(postID && Number.isInteger(postID)){ // If the UserID is set and has the right format ...
+                url = "/employee/archive_publication?postID=" + postID; // Create the deletion URL
+                document.getElementById("submit_archive").href = url; // Send the deletion url into the modal
+            }
+        }
+    
         // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
-        function search(){
+         function search() {
+            const search_value = document.getElementById("search_bar").value.toLowerCase();
+            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Cibler les colonnes
+            const offers_title = Array.from(document.getElementsByClassName("card-header"));
             
-            // Get the values
-            search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the value of the search field
-            offers = Array.from(document.getElementsByClassName("card")); // Get all the posts
-            offers_title = Array.from(document.getElementsByClassName("card-header")); // Get all the posts titles
-            
-            offers.forEach((offer, index) => { // Verify that the post title match with the search value for all the posts
-                
-                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){ // If the search value doesn't match with the title
-                    offer.style.display = 'none'; // Make the post disappear
+            containers.forEach((container, index) => {
+                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'block';
                 }
-                
-                else{ // The search value match with the title
-                    offer.style.display = 'block'; // Makes the post appear
-                }
-                
-            })
-            
+            });
         }
     
         document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value of the search field changes

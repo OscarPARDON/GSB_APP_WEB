@@ -18,26 +18,26 @@
     
     </style>
     
-    <main class="bg-black d-flex vh-100 justify-content-center align-items-center">
+    <main class="dark-bg d-flex vh-100 justify-content-center align-items-center">
     
-        <div class="text-center container bg-light d-flex flex-column align-items-center justify-content-center p-5 rounded">
+        <div class="text-center container secondary-bg d-flex flex-column align-items-center justify-content-center p-5 rounded">
             
-            <h1 class="fw-bold bg-info text-white rounded p-4 mb-3">Nous avons bien reçu votre candidature</h1>
+            <h1 class="fw-bold dark-txt rounded p-4 mb-3">Nous avons bien reçu votre candidature</h1>
             
             <img id="check" src="{% static 'images/check.svg' %}" style="width: 130px" alt="Logo GSB">
             
-            <u class="fs-4">Veuillez conserver ce numéro pour vous connecter : </u>
+            <u class="fs-4 dark-txt">Veuillez conserver ce numéro pour vous connecter : </u>
             <div class="d-flex flex-row">
-                <h3 class="fs-2">{{ application_number }}</h3>
+                <h3 class="fs-2 dark-txt">{{ application_number }}</h3>
                 <a href="" onclick="copy()"><img src=" {% static "images/copy.svg" %}" style="width: 40px" alt="Copier le numéro de candidat"></a>
             </div>
             
-            <p class="fs-5">Notre équipe va bientôt examiner votre candidature <br>
-            Vous serez notifié <strong>par mail et sur votre espace candidat</strong> lorsque le verdict sera rendu </p>
+            <p class="fs-5">Notre équipe va bientôt examiner votre candidature. <br>
+            Vous serez notifié <strong>par mail et sur votre espace candidat</strong> lorsque le verdict sera rendu !</p>
             
-            <div class="d-flex flex-row">
-                <a href="/" class="btn btn-lg btn-secondary mt-3 me-5">Accueil</a>
-                <a href="/candidate/login?application_number={{ application_number }}" class="btn btn-lg btn-primary mt-3">Connexion</a>
+            <div class="d-flex flex-column">
+                <a href="/candidate/login?application_number={{ application_number }}" class="btn btn-lg secondary-btn mt-3">Connexion</a>
+                <a href="/" class="btn btn-lg mt-1">Accueil</a>
             </div>
             
         </div>

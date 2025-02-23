@@ -8,13 +8,14 @@ from django.template.loader import render_to_string
 from DjangoProject1 import settings
 from DjangoProject1.settings import STATICFILES_DIRS # Import variable from project settings
 from candidate.models import Application # Import Application Model
+from mailing.wsgi import send_email
 from visitor.forms import ApplicationForm # Import Application Form
 from visitor.models import Publication # Import Publication Model
 ###################################################################################################################
 
 def visitorpage(request): # Default Page
     # Get the values needed for the views
-    posts = Publication.objects.all() # Get all the Publications in the Database
+    posts = Publication.objects.filter(archived=0) # Get all the Publications in the Database
     error = request.GET.get('error', '') # If an error is sent, get the error
 
     return render(request, 'bodies/visitor_page.html', {'posts': posts, 'error': error}) # Call the template and pass the variables
@@ -24,33 +25,33 @@ def application(request): # Application Page : Displays the application form & m
 
     # Get the id of the job offer in the URL and verify the value
     postID = request.GET.get('postID', '') # Get the job offer linked to the application
-    if not (postID and postID.isdigit() and Publication.objects.filter(id=int(postID)).exists()): # If the job offer doesn't exist ...
+    if not (postID and postID.isdigit() and Publication.objects.filter(id=int(postID),archived=0).exists()): # If the job offer doesn't exist ...
         return redirect('/') # Redirection to the homepage
 
     if request.method == 'POST': # If a form is submitted
 
-        if Application.objects.filter(candidate_firstname=request.POST['firstname'],candidate_lastname=request.POST['name'],job_publication=postID).exists(): # If there is already an application from the person on this job offer ...
-            return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer
-        if Application.objects.filter(candidate_mail=request.POST['email'],job_publication=postID).exists(): #If there is already an application with this mail on this job offer ...
-            return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer
+        form = ApplicationForm(request.POST, request.FILES)  # Collect the submited form's data
 
-        form = ApplicationForm(request.POST, request.FILES) # Collect the submited form's data
+        if form.is_valid():
 
-        # Application Number Generation
-        today = datetime.now().strftime('%Y%m%d')# Get the current date in format YYYYMMDD
-        max_application = Application.objects.aggregate(Max('application_number'))['application_number__max'] # Get the most recent application number
+            if Application.objects.filter(candidate_firstname=form.cleaned_data['firstname'],candidate_lastname=form.cleaned_data['name'],job_publication=postID).exists(): # If there is already an application from the person on this job offer ...
+                return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer
+            if Application.objects.filter(candidate_mail=form.cleaned_data["email"],job_publication=postID).exists(): #If there is already an application with this mail on this job offer ...
+                return redirect('/?error=Vous avez déja candidaté pour cette offre') # Redirection to the homepage and inform the user that he already applied to this offer0
 
-        if max_application and max_application[:8] == today: # If this is not the first application today ...
-            max_num = int(max_application[-3:]) + 1 # Incrementation of the biggest number
-        else: # If this is the first application of the day ...
-            max_num = 0 # set to 0
+            # Application Number Generation
+            today = datetime.now().strftime('%Y%m%d')# Get the current date in format YYYYMMDD
+            max_application = Application.objects.aggregate(Max('application_number'))['application_number__max'] # Get the most recent application number
 
-        max_num_str = f"{max_num:03}" # Formate the 3 digits number
-        number = f"{today}{max_num_str}" # Build the application number (Current date + incrementing 3 digits number)
+            if max_application and max_application[:8] == today: # If this is not the first application today ...
+                max_num = int(max_application[-3:]) + 1 # Incrementation of the biggest number
+            else: # If this is the first application of the day ...
+                max_num = 0 # set to 0
 
-        # Form data validation and insertion into the database
-        if form.is_valid(): # If the submitted data match with expected (see clean() function in Application/forms.py) ...
+            max_num_str = f"{max_num:03}" # Formate the 3 digits number
+            number = f"{today}{max_num_str}" # Build the application number (Current date + incrementing 3 digits number)
 
+            # Form data validation and insertion into the database
             insertion = Application( # Prepare the insertion in the database
                 application_number=number,
                 candidate_firstname=form.cleaned_data['firstname'].capitalize(),
@@ -62,11 +63,7 @@ def application(request): # Application Page : Displays the application form & m
             )
             insertion.save() # Save the application in the database
 
-            # Sends an email to inform that the application was successfully submitted and to communicate the application number
-            html_content = render_to_string('emails/application_confirmation_email.html',{'publication_name':insertion.job_publication.title,'application_number':insertion.application_number}) # Get the email template
-            email = EmailMessage("GSB Recrutement", html_content, settings.EMAIL_HOST_USER,[form.cleaned_data['email']]) # Configure the email
-            email.content_subtype = 'html' # Set the email content type to html
-            email.send(fail_silently=True) # Send the email
+            send_email('application_confirmation_email.html',{'publication_name':insertion.job_publication.title, 'application_number':insertion.application_number},[form.cleaned_data['email']])
 
             #Files management
             path = os.path.join('', str(STATICFILES_DIRS[0]) + '/files/' + number ) # Get the path of the file storage repository

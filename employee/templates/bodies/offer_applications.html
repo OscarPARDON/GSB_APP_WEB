@@ -2,79 +2,83 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Offer management page : Display all the application of an offer, enable to reject or accept the applications and to cancel the verdict -->
 
-    <header class="bg-secondary border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+    <header class="dark-bg border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
             <div></div>
-            <div class="ms-5 ps-3"><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ms-5 ps-3"><a href="/employee/application_management"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
 
-    <main class="d-flex flex-column align-items-center" style="padding-top: 9%;">
-    
-        <table class="container table border table-hover" >
-        
-            <thead class="border border-dark">
-            
+    <main class="d-flex flex-column align-items-center vh-100" style="padding-top: 9%;">
+
+    <div class="container border rounded dark-border px-0 h-75 table-container">
+
+        <table class="table table-hover {% if not applications %}h-100{% endif %}" id="table">
+
+            <thead class="custom-table-bg sticky-header" style="position: sticky; top: 0;">
+
                 <tr>
-                    <th scope="col" style="width: 5%">#</th>
-                    <th scope="col" style="width: 20%">Numéro de candidature</th>
-                    <th scope="col" style="width: 13%;cursor: pointer" onclick="statusSort()">Status</th> <!-- Click to sort By Status -->
-                    <th scope="col" class="text-center" style="width: 20%">CV</th>
-                    <th scope="col" class="text-center" style="width: 20%">Lettre de motivation</th>
+                    <th scope="col" class="text-white ps-3" style="width: 5%">#</th>
+                    <th scope="col" class="text-white" style="width: 20%">Numéro de candidature</th>
+                    <th scope="col" class="text-white" style="width: 13%;cursor: pointer" onclick="statusSort()">Status</th> <!-- Click to sort By Status -->
+                    <th scope="col" class="text-center text-white" style="width: 20%">CV</th>
+                    <th scope="col" class="text-center text-white" style="width: 20%">Lettre de motivation</th>
                     <th scope="col" style="width: 23%"></th>
                 </tr>
-            
+
             </thead>
-        
+
             <tbody id="applications-table">
-            
+
                 {% if not applications %} <!-- If they are no applications to display, display an empty table message -->
-                    <tr class="text-center"><td class="p-5" colspan="6"><h5 class="text-secondary fw-bold">Aucune candidature</h5></td></tr>
+                    <tr class="text-center align-middle"><td colspan="6"><h5 class="dark-txt fw-bold">Aucune candidature</h5></td></tr>
                 {% endif %}
-                
+
                 <!-- Empty table message, hidden by default, displays if the table is empty after status sorting -->
-               <tr class="text-center p-5" style="display: none" id="empty_tab_msg"><td colspan="6" class="p-5"><h5 class="text-secondary fw-bold">Aucune candidature</h5></td></tr>
+               <tr class="text-center align-middle" style="display: none" id="empty_tab_msg"><td colspan="6" class="p-5"><h5 class="dark-txt fw-bold">Aucune candidature</h5></td></tr>
 
                 {% for application in applications %} <!-- Displayed all the applications retrieved in the database -->
-                    
+
                     <tr class="align-middle" data-status="{{ application.status }}">
-                    
-                        <th scope="row">{{ forloop.counter }}</th>
+
+                        <th scope="row" class="ps-3">{{ forloop.counter }}</th>
                         <td>{{ application.application_number }}</td>
-                    
-                        <td style="vertical-align: middle;">
+
+                        <td>
                             {% if application.status == 1 %} <!-- Status = 1 : The application is in review -->
-                                <p class="badge p-2 bg-warning">En Attente</p> 
+                                <p class="badge p-2 mb-0 bg-warning">En Attente</p>
                             {% elif application.status == 2 %} <!-- Status = 2 : The application is rejected -->
-                                <p class="badge p-2 bg-danger">Refusé</p>
+                                <p class="badge p-2 mb-0 bg-danger">Refusé</p>
                             {% elif application.status == 3 %} <!-- Status = 3 : The application is accepted -->
-                                <p class="badge p-2 bg-success">Accepté</p>
+                                <p class="badge p-2 mb-0 bg-success">Accepté</p>
                             {% else %} <!-- Status is unknown -->
-                                <p class="badge p-2 bg-secondary">Inconnu</p>
+                                <p class="badge p-2 mb-0 bg-secondary">Inconnu</p>
                             {% endif %}
                         </td>
-                    
-                        <td class="text-center"><a class="btn btn-secondary px-5" href="show_file?application_number={{ application.application_number }}&file=cv" target="_blank">CV</a></td>
-                        <td class="text-center"><a class="btn btn-secondary" href="show_file?application_number={{ application.application_number }}&file=coverletter" target="_blank">Lettre de Motivation</a></td>
-                        <td class="text-center">
-                        
+
+                        <td class="text-center"><a class="btn border-dark px-5 dark-txt" href="show_file?application_number={{ application.application_number }}&file=cv" target="_blank">CV</a></td>
+                        <td class="text-center"><a class="btn border-dark dark-txt" href="show_file?application_number={{ application.application_number }}&file=coverletter" target="_blank">Lettre de Motivation</a></td>
+                        <td class="text-end">
+
                             {% if application.status == 1 %} <!-- The application has not being reviewed -->
                                 <a href="status_modification?application_number={{ application.application_number }}&status=3" class="btn btn-success">Accepter</a>
-                                <a href="status_modification?application_number={{ application.application_number }}&status=2" class="btn btn-danger ms-3">Refuser</a>
+                                <a href="status_modification?application_number={{ application.application_number }}&status=2" class="btn btn-danger mx-3">Refuser</a>
                             {% endif %}
-                        
+
                             {% if application.status == 2 or application.status == 3 %} <!-- The application been reviewed -->
                                     <a href="status_modification?application_number={{ application.application_number }}&status=1" class="btn btn-warning">Annuler le verdict</a>
                             {% endif %}
-                        
+
                         </td>
-                    
+
                     </tr>
-                    
+
                 {% endfor %}
-            
+
             </tbody>
 
         </table>
+
+    </div>
     
     </main>
 
@@ -103,9 +107,11 @@
         
         if (isempty) { // If the table is empty ...
             document.getElementById("empty_tab_msg").style.display = ""; // Display the empty table message
+            document.getElementById("table").style.height = "100%";       
         }
         else{ // If the table is not empty
             document.getElementById("empty_tab_msg").style.display = "none"; // Do not show the empty table message
+            document.getElementById("table").style.height = "";
         }
     }
     

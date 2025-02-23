@@ -9,11 +9,11 @@
 
 </style>
     
-<main class="vh-100 container bg-light my-2 pb-4 d-flex flex-column align-items-center">
+<main class="vh-100 container my-2 pb-4 d-flex flex-column align-items-center">
 
-    <h1 class="fw-bold bg-info text-white rounded my-5 p-4">Nouvel Employé</h1>
+    <h1 class="fw-bold dark-txt my-5 p-4">Nouvel Employé</h1>
 
-    <div class="container bg-light p-4 border border-info rounded">
+    <div class="container p-4 border dark-border rounded">
     
         <form action="/employee/new_employee" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -23,7 +23,7 @@
                 <div class="container-fluid d-flex flex-column w-50 p-3">
                 
                     <div class="form-group h-50">
-                        <label class="fw-bold" for="lastname">Nom</label>
+                        <label class="fw-bold dark-txt" for="lastname">Nom</label>
                         {{ form.employee_lastname }}
 
                         {% if form.employee_lastname.errors %} <!-- If error occur with the field, display the erros -->
@@ -36,7 +36,7 @@
                 <div class="d-flex flex-column w-50 p-3" >
                 
                     <div class="form-group ">
-                        <label class="fw-bold" for="firstname">Prénom</label>
+                        <label class="fw-bold dark-txt" for="firstname">Prénom</label>
                         {{ form.employee_firstname }}
 
                         {% if form.employee_firstname.errors %} <!-- If error occur with the field, display the erros -->
@@ -51,7 +51,7 @@
             <div class="container">
                 
                 <div class="form-group my-2 px-3">
-                    <label class="fw-bold" for="email">Email</label>
+                    <label class="fw-bold dark-txt" for="email">Email</label>
                     {{ form.employee_email }}
 
                     {% if form.employee_email.errors %} <!-- If error occur with the field, display the erros -->
@@ -60,7 +60,7 @@
                 </div>
             
                 <div class="form-group my-2 px-3">
-                    <label class="fw-bold" for="role">Role</label>
+                    <label class="fw-bold dark-txt" for="role">Role</label>
                     {{ form.role }}
 
                     {% if form.role.errors %} <!-- If error occur with the field, display the erros -->
@@ -70,9 +70,9 @@
                 
             </div>
         
-            <div class="d-flex flex-row justify-content-center mt-4">
-                <a class="btn btn-lg btn-secondary rounded me-5" href="/employee/admin_user_management">Annuler</a>
-                <button class="btn btn-lg btn-success" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
+            <div class="d-flex flex-column align-items-center mt-4">
+                <button class="btn btn-lg secondary-btn" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
+                <a class="btn btn-lg rounded fs-6" href="/employee/admin_user_management">Annuler</a>
             </div>
             
             {% if form.non_field_errors %} <!-- If error occur with the form, display the errors -->

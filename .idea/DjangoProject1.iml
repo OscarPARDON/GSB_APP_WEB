@@ -27,6 +27,8 @@
         <option value="$MODULE_DIR$/visitor/templates" />
         <option value="$MODULE_DIR$/candidate/templates" />
         <option value="$MODULE_DIR$/employee/templates" />
+        <option value="$MODULE_DIR$/conversation/templates" />
+        <option value="$MODULE_DIR$/mailing/templates" />
       </list>
     </option>
   </component>

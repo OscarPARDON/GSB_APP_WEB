@@ -1,0 +1,123 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Employees Main Page : Page that displays all the current offers and enable the user to access to the applications tables pages -->
+
+    <style>
+    
+        .cnx-btn {
+
+            @media (min-width: 768px) {
+                position: absolute;
+                top: 50%;
+                right: 20px;
+                transform: translateY(0%);
+            }
+                    
+            @media (max-width: 767px) {
+                margin-top: 1rem; 
+            }
+        }
+
+        .card{
+            background-color: whitesmoke ;
+            height: 50vh;
+        }
+
+        .card-header {
+            height: 20%;
+            max-width: 100%;
+            white-space: nowrap;     /* Empêche le texte de passer à la ligne */
+            overflow: hidden;        /* Cache le texte qui dépasse */
+            text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+        }
+
+        .card-body::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .card-body {
+            height: 80%;
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+            overflow: scroll;
+        }
+        
+        .modal-footer{
+            border-top: whitesmoke !important;
+            padding: 0px !important;
+        }
+    
+    </style>
+    
+    <header class="dark-bg border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="{%if request.user.role == 'admin' or request.user.role == 'manager' %}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+    
+    <main class="d-flex flex-column align-items-center" style="padding-top: 7%">
+
+        <input type="text" id="search_bar" class="text-center w-50 form-control dark-border rounded mb-5" placeholder="Rechercher une offre">
+    
+        <div class="container-fluid">
+            <div class="row g-4 d-flex justify-content-center">
+
+                    {% if not posts %} <!-- If there are no posts in the database -->
+
+                        <div class="d-flex align-items-center justify-content-center" style="height: 75vh">
+                            <h3 class="text-center dark-txt">Aucune offre n'a été publiée</h3>
+                        </div>
+
+                    {% else %} <!-- If there are posts to display -->
+
+                        {% for post in posts %} <!-- Display all the posts -->
+
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+
+                                <div class="card my-3 round d-flex flex-column" id="offer">
+                                    <div class="card-header dark-bg text-center fs-3 fw-bold text-white">
+                                        {{ post.title }}
+                                    </div>
+                                
+                                    <div class="card-body text-center mb-2 mx-3 dark-txt flex-grow-1">
+                                        {{ post.description }}
+                                    </div>
+                                    
+                                    <a href="/employee/offer_applications?postID={{ post.id }}" class="card-footer dark-bg text-center px-5 btn secondary-btn py-3 fw-bold mt-auto">
+                                        Accéder aux candidatures
+                                    </a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+            </div>
+        </div>
+    
+    </main>
+
+    <script>
+    
+        // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
+        function search() {
+            const search_value = document.getElementById("search_bar").value.toLowerCase();
+            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Cibler les colonnes
+            const offers_title = Array.from(document.getElementsByClassName("card-header"));
+            
+            containers.forEach((container, index) => {
+                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'block';
+                }
+            });
+        }
+    
+        document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value of the search field changes
+        
+    </script>
+    
+{% endblock %}

@@ -34,7 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.admin', # Admin user management App
     'visitor', # Visitors management app
     'candidate.apps.CandidateConfig', # Candidates management app
-    'employee.apps.EmployeeConfig' # Employees management app
+    'employee.apps.EmployeeConfig',
+    'conversation.apps.ConversationConfig',
+    'mailing.apps.MailingConfig' # Employees management app
 ]
 
 # List of the backend(s) used for authentication
@@ -88,7 +90,7 @@ WSGI_APPLICATION = 'DjangoProject1.wsgi.application' # WSGI of the applications
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': { # Default Database
-        'ENGINE': 'django.db.backends.mysql', # Engine used by the DB
+        'ENGINE': '', # Engine used by the DB
         'NAME': '', # Name of the DB
         'USER': '', # Username to connect to the DB
         'PASSWORD': '', # Password to connect to the DB
@@ -137,3 +139,6 @@ STATICFILES_DIRS = [BASE_DIR / 'DjangoProject1/static'] # Absolute path to the s
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Local Message Encryption Token
+MSG_ENC_TOKEN = ''

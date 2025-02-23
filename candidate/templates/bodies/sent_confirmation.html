@@ -2,22 +2,28 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Page that confirm that an email was sent -->
     
-    <header class="bg-secondary border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2" >
+    <header class="dark-bg border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2" >
             <div><a href="/"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
     </header>
     
-    <main class="vh-100 d-flex align-items-center justify-content-center">
+    <main class="vh-100 d-flex align-items-center justify-content-center secondary-bg">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="dark-bg p-4 rounded text-center">
+                        <h1 class="text-white mb-4">Un email vous a été envoyé</h1>
+                        
+                        <p class="fs-5 text-white mb-4">
+                            Le {{ content }} a bien été envoyé {% if email %}à {{ email }}{% endif %}
+                        </p>
     
-        <div class="container bg-light p-4 w-50 d-flex flex-column align-items-center justify-content-center border border-info rounded">
-            
-            <h1>Un email vous a été envoyé</h1>
-            
-            <p class="fs-5">Le {{ content }} a bien été envoyé {% if email %}à {{ email }}{% endif %}</p>
-
-            <a href="/candidate/login" class="btn btn-lg btn-primary">Revenir à la connexion</a>
-            
+                        <a href="/candidate/login" class="btn btn-lg text-white">
+                            Revenir à la connexion
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-        
     </main>
     
 {% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+
+    <style>
+        
+        .bubble {
+            --r: 1em;  /* the radius */
+            --t: 1.5em; /* the size of the tail */
+            max-width: 300px;
+            padding: 1em;
+            border-inline: var(--t) solid #0000;
+            border-radius: calc(var(--r) + var(--t))/ var(--r);
+            mask: 
+                radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%) 
+                var(--_p) 100%/var(--t) var(--t) no-repeat,
+                linear-gradient(#000 0 0) padding-box;
+            color: #fff;
+        }
+        
+        .left {
+                --_p: 0;
+                border-bottom-left-radius: 0 0;
+                place-self: start;
+                color: #111d4a;
+                background-color: lightblue;
+            }
+            .right {
+                --_p: 100%;
+                border-bottom-right-radius: 0 0;
+                place-self: end;
+                background-color: #111d4a;
+            }
+
+#messages-container::-webkit-scrollbar {
+  display: none;
+}
+
+    </style>
+    
+    <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/employee/archived_applications"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+    
+    <main class="d-flex flex-row vh-100">
+    
+        <div class="dark-bg d-flex flex-column align-items-center px-3" style="width: 20%;padding-top: 7%">
+            <div class="container text-white d-flex flex-column ">
+                <h3 class="text-center mb-5">Informations Candidats</h3>
+                <p><strong>Nom : </strong>{{ application.candidate_lastname }}</p>
+                <p><strong>Prénom : </strong>{{ application.candidate_firstname }}</p>
+                <p><strong>N° De Candidature : </strong>{{ application.application_number }}</p>
+                <p><strong>Email : </strong>{{ application.candidate_mail }}</p>
+                <p><strong>Tél : </strong>{{ application.candidate_phone }}</p>
+            </div>
+            <div class="mt-5">
+                <a class="btn border border-white text-white w-100" href="show_file?application_number={{ application.application_number }}&file=cv" target="_blank">CV</a>
+                <a class="btn border border-white text-white w-100 mt-3" href="show_file?application_number={{ application.application_number }}&file=coverletter" target="_blank">Lettre de Motivation</a>
+            </div>
+            <div class="d-flex flex-column mb-3 h-100 justify-content-end">
+                {% if request.user.role == "admin" %}
+                <a class="btn text-white w-100 mb-2" href="/employee/application_delete?candidateId={{ application.application_number }}&status=1">Supprimer</a>
+                {% endif %}
+            </div>
+        </div>
+    
+        <div class="container d-flex flex-column align-items-center" style="width: 80%;padding-top: 6%" >
+        
+            <div id="messages-container"  class="w-75 mt-3 py-3" style="height: 75vh;overflow: scroll">
+                {% if messages %}
+                    {% for message in messages %}
+
+                        <div class="p-4 mt-2 {% if message.sender == 'employee' %}bubble right{% else %}bubble left{% endif %}">
+                            {{ message.content }}
+                            <br><span class="fst-italic fw-light text-secondary text-end">{{ message.timestamp }}</span>
+                        </div>
+                        
+                    {% endfor %}
+                {% else %}
+                    <div class="h-100 d-flex justify-content-center align-items-center">
+                        <h3 class="fw-bold dark-txt">Aucun message</h3>
+                    </div>
+                {% endif %}
+            </div>
+            
+        </div>
+    
+    </main>
+    
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        });
+        
+    </script>
+    
+{% endblock %}

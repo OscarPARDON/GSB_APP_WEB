@@ -1,0 +1,234 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+
+    <style>
+        
+         .bubble {
+                    --r: 1em;  /* the radius */
+                    --t: 1.5em; /* the size of the tail */
+                    max-width: 300px;
+                    padding: 1em;
+                    border-inline: var(--t) solid #0000;
+                    border-radius: calc(var(--r) + var(--t))/ var(--r);
+                    mask: 
+                        radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%) 
+                        var(--_p) 100%/var(--t) var(--t) no-repeat,
+                        linear-gradient(#000 0 0) padding-box;
+                    color: #fff;
+                }
+        .left {
+            --_p: 0;
+            border-bottom-left-radius: 0 0;
+            place-self: start;
+            color: #111d4a;
+            background-color: lightblue;
+        }
+        .right {
+            --_p: 100%;
+            border-bottom-right-radius: 0 0;
+            place-self: end;
+            background-color: #111d4a;
+        }
+
+#messages-container::-webkit-scrollbar {
+  display: none;
+}
+
+    </style>
+    
+    <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2" >
+            <div></div>
+            <div class="ms-5 ps-3"><a href="/employee/validated_applications"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
+    </header>
+    
+    <main class="d-flex flex-row">
+    
+        <div class="dark-bg d-flex flex-column align-items-center px-3" style="width: 20%;padding-top: 7%">
+            <div class="container border border-white rounded text-white d-flex flex-column p-3">
+                <h3 class="text-center">Votre Interlocuteur</h3>
+                <p>
+                    {{ application.candidate_lastname }} {{ application.candidate_firstname }}<br>
+                    ({{ application.application_number }})
+                </p>
+                <p><strong>Email : </strong>{{ application.candidate_mail }}</p>
+                <p><strong>Tél : </strong>{% if application.candidate_phone %}{{ application.candidate_phone }} {% else %} Aucun numéro de téléphone renseigné {% endif %}</p>
+            </div>
+            <div class="container d-flex flex-column mt-3 border border-white text-white rounded p-3">
+                <h3 class="text-center">Entretiens</h3>
+                {% if not interviews %}
+                    <p class="text-center">Aucun entretien n'est prévu pour le moment</p>
+                {% else %}
+                    <div class="container">
+                    
+                        <h5>Prochain entretien :</h5>
+                    
+                            <div>
+                                {% for interview in interviews %}
+                                    <p>- Entretien le {{ interview.date }}</p>
+                                {% endfor %}
+                            </div>
+                    
+                    </div>
+                {% endif %}
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#new_interview_modal">Proposer un nouvel entretien</button>
+            </div>
+            <div class="d-flex flex-column mb-3 h-100 justify-content-end">
+                {% if request.user.role == "admin" %}
+                <a class="btn w-100 text-white border border-white mb-2" href="/employee/status_modification?application_number={{ application.application_number }}&status=2">Rejeter</a>
+                {% endif %}
+                <a class="btn text-white w-100 border border-white" href="/employee/status_modification?application_number={{ application.application_number }}&status=1">Renvoyer en Examen</a>
+            </div>
+        </div>
+    
+        <div class="container d-flex flex-column align-items-center" style="width: 80%;padding-top: 6%" >
+        
+            <div id="messages-container"  class="w-75 mt-3 py-3" style="height: 75vh;overflow: scroll">
+                {% if feed %}
+                    {% for message in feed %}
+                        
+                        {% if message.content %}
+                        <div class="p-4 mt-2 {% if message.sender == 'employee' %}bubble right{% else %}bubble left{% endif %}">
+                            {{ message.content }}
+                            <br><span class="fst-italic fw-light text-secondary text-end">{{ message.timestamp }}</span>
+                        </div>
+                        {% else %}
+                            <div class="p-3 mt-2 w-50 d-flex flex-column align-items-center border rounded ms-auto position-relative 
+                                {% if message.status == 1 %}border-danger{% elif message.status == 2 %}border-success{% else %}border-warning{% endif %}">
+    
+                                <!-- Bouton de fermeture -->
+                                <a href="#" onclick="fill_cancellation_modal({{ message.id }})" data-bs-toggle="modal" data-bs-target="#confirm_cancellation_modal" class="position-absolute top-0 end-0 me-3 text-dark text-decoration-none fs-2" aria-label="Fermer">
+                                    &times;
+                                </a>
+                            
+                                <div class="d-flex flex-row">
+                                    <h5 class="text-center">{{ message.title }}</h5>
+                                </div>
+                            
+                                <p>Vous avez proposé</p>
+                                <p>Type d'entretien : {{ message.interview_category }}</p>
+                                <p>Le : {{ message.date }}</p>
+                            
+                                {% if message.status == 1 %}
+                                    <h5 class="text-danger fw-bold">Refusé</h5>
+                                {% elif message.status == 2 %}
+                                    <h5 class="text-success fw-bold">Accepté</h5>
+                                {% else %}
+                                    <h5 class="text-warning fw-bold">En Attente</h5>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        
+                    {% endfor %}
+                {% else %}
+                    <div class="h-100 d-flex justify-content-center align-items-center">
+                        <h3 class="fw-bold dark-txt">Aucun message pour le moment</h3>
+                    </div>
+                {% endif %}
+            </div>
+        
+            <form autocomplete="off" action="/chat/employee?candidateId={{ application.application_number }}" class="d-flex flex-row mt-3 mb-5 w-50" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                {{ msgform.contentField }}
+                <button class="btn secondary-btn " type="submit">&#x2191;</button>
+            </form>
+            
+        </div>
+    
+        <div class="modal fade" id="confirm_cancellation_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title text-center dark-txt">Etes vous sûr de vouloir annuler cet entretien ?</h5>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <form action="/chat/delete_interview" class="w-100 d-flex flex-column align-items-center" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ delinterviewform.interviewId }}
+                            <button type="submit" class="btn secondary-btn w-50" id="submit_cancellation">Oui</button>
+                            <button type="button" class="btn w-50" data-bs-dismiss="modal">Non</button>
+                                
+                        </form>
+                        
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+        <script>
+            
+            function fill_cancellation_modal(interviewID){
+            
+                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
+                    document.getElementById("interviewId").value = interviewID;
+                }
+            
+            }
+            
+        </script>
+    
+        <div class="modal fade" id="new_interview_modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header dark-bg text-white"><h5 class="modal-title">Proposer un entretien</h5></div>
+                    
+                    <form action="/chat/new_interview?candidateId={{ application.application_number }}" id="submit_interview" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                                
+                                <label for="title">Titre de l'entretien</label>
+                                {{ interviewform.title }}
+    
+                                <label for="date">Date de l'entretien</label>
+                                {{ interviewform.date }}
+    
+                                <label for="time">Heure de l'entretien</label>
+                                {{ interviewform.time }}
+    
+                                <label for="category">Type d'entretien</label>
+                                {{ interviewform.category }}
+                            
+                                {% if error %}
+                                    <p class="text-danger">{{ error }}</p>
+                                {% endif %}
+                        
+                        </div>
+                        
+                        <div class="modal-footer d-flex flex-column align-items-center">
+                            <button type="submit" class="btn secondary-btn w-50" id="submit_interview_proposition">Envoyer</button>
+                            <button type="button" class="btn w-50 m-0 " data-bs-dismiss="modal">Annuler</button>
+                        </div>
+                    </form>
+                        
+                </div>
+            </div>
+        </div>
+    
+    {% if error %}
+        <script>
+        
+          document.addEventListener("DOMContentLoaded", function () {
+            var myModal = new bootstrap.Modal(document.getElementById("new_interview_modal"));
+            myModal.show();
+          });
+          
+        </script>
+    {% endif %}
+    
+    </main>
+    
+    
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        });
+        
+    </script>
+    
+
+{% endblock %}

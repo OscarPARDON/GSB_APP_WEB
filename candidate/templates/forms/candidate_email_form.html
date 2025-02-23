@@ -2,27 +2,36 @@
 {% load static %} <!-- Load the Static resources directory (images) -->
 {% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
     
-    <header class="bg-secondary border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2" >
-            <div ><a href="/"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
-    </header>
-    
-    <main class="vh-100 d-flex align-items-center justify-content-center">
-    
-        <form method="post" enctype="multipart/form-data" class="container bg-light p-4 w-50 border border-info rounded d-flex flex-column align-items-center justify-content-center">
-            {% csrf_token %}
-        
-            <label for="email" class="fs-5 mb-3 fw-bold">Entrez votre email</label>
-            
-            {{ form.email }}
-            
-            {% if form.email.errors %}
-                {{ form.email.errors }}
-            {% endif %}
-        
-            <button type="submit" class="btn btn-lg btn-success mt-3">Envoyer</button>
-        
-        </form>
-        
-    </main>
+    <header class="dark-bg border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2">
+    <div>
+        <a href="/">
+            <img src="{% static 'images/gsb_logo.png' %}" class="img-fluid" style="max-width: 130px" alt="Logo GSB">
+        </a>
+    </div>
+</header>
+
+<main class="vh-100 d-flex align-items-center justify-content-center secondary-bg">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+                <form method="post" enctype="multipart/form-data" class="dark-bg p-4 rounded d-flex flex-column align-items-center justify-content-center">
+                    {% csrf_token %}
+                
+                    <label for="email" class="fs-3 mb-3 fw-bold text-white">Entrez votre email</label>
+                    
+                    {{ form.email }}
+                    
+                    {% if form.email.errors %}
+                        <div class="alert alert-danger mt-2 w-100">
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
+                
+                    <button type="submit" class="btn btn-lg mt-3 text-white">Envoyer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
     
 {% endblock %}

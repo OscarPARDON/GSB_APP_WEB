@@ -9,11 +9,11 @@
 
 </style>
     
-<main class="vh-100 container bg-light my-2 pb-4 d-flex flex-column align-items-center">
+<main class="vh-100 container pb-4 d-flex flex-column align-items-center">
 
-    <h1 class="fw-bold bg-info text-white rounded my-5 p-4">Modifier un employé</h1>
+    <h1 class="fw-bold dark-txt my-5">Modifier un employé</h1>
 
-    <div class="container bg-light p-4 border border-info rounded">
+    <div class="container p-4 border dark-border rounded">
     
         <form action="/employee/update?userID={{ userID }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
@@ -72,9 +72,9 @@
                 
             </div>
         
-            <div class="d-flex flex-row justify-content-center mt-4">
-                <a class="btn btn-lg btn-secondary rounded me-5" href="/employee/admin_user_management">Annuler</a>
-                <button class="btn btn-lg btn-primary" type="submit" id="submit_btn" name="submit-application">Enregistrer</button>
+            <div class="d-flex flex-column align-items-center mt-4">
+                <button class="btn btn-lg secondary-btn" type="submit" id="submit_btn" name="submit-application">Enregistrer</button>
+                <a class="btn rounded fs-6" href="/employee/admin_user_management">Annuler</a>
             </div>
             
             {% if form.non_field_errors %} <!-- If error occur with the form, display the errors -->

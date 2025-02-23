@@ -1,0 +1,261 @@
+{% extends 'base.html' %} <!-- Call the HTML head -->
+{% load static %} <!-- Load the Static resources directory (images) -->
+{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+
+    <style>
+        .bubble {
+            --r: 1em;  /* the radius */
+            --t: 1.5em; /* the size of the tail */
+            max-width: 300px;
+            padding: 1em;
+            border-inline: var(--t) solid #0000;
+            border-radius: calc(var(--r) + var(--t))/ var(--r);
+            mask: 
+                radial-gradient(100% 100% at var(--_p) 0,#0000 99%,#000 102%) 
+                var(--_p) 100%/var(--t) var(--t) no-repeat,
+                linear-gradient(#000 0 0) padding-box;
+            color: #fff;
+        }
+        
+        .sizing{
+            @media (min-width: 768px) {
+                width: 50%;
+            }
+                    
+            @media (max-width: 767px) {
+                width: 100%; 
+            }
+        }
+        
+        .interview-sizing{
+            @media (min-width: 768px) {
+                width: 30%;
+            }
+                    
+            @media (max-width: 767px) {
+                width: 100%; 
+            }
+        }
+
+        .fade-txt {
+            font-style: italic;
+            color: white;
+            opacity: 60%;
+        }
+        
+        .left {
+            --_p: 0;
+            border-bottom-left-radius: 0 0;
+            place-self: start;
+            color: #111d4a;
+            background-color: lightblue;
+        }
+        .right {
+            --_p: 100%;
+            border-bottom-right-radius: 0 0;
+            place-self: end;
+            background-color: #111d4a;
+        }
+        
+        #messages-container::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    
+<body>
+    <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2 px-3">
+        <div></div>
+        <div class="ms-5 ps-3">
+            <a href="/candidate/hub">
+                <img src="{% static 'images/gsb_logo.png' %}" style="width: 130px" alt="Logo GSB">
+            </a>
+        </div>
+        <div class="me-5">
+            <a href="/candidate/logout">
+                <img src="{% static 'images/logout.svg' %}" style="width: 50px" alt="Se Déconnecter">
+            </a>
+        </div>
+    </header>
+    
+    <main class="d-flex flex-column flex-lg-row secondary-bg">
+    {% if interviews %}
+    <!-- Desktop sidebar -->
+    <div class="dark-bg d-none d-lg-flex flex-column align-items-center px-3 text-white flex-shrink-0 w-25" style="padding-top: 9%">
+        <h3>Prochains Entretiens</h3>
+        {% for interview in interviews %}
+        <div class="container border border-white rounded mt-3 p-2">
+            <h5>Entretien {{ interview.interview_category }}</h5>
+            <p class="mb-0">Le {{ interview.date }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="container d-flex flex-column align-items-center px-3 vh-100" style="padding-top: 6%">
+        <div id="messages-container" class="w-100 mt-3 py-3" style="height: 75vh; overflow-y: scroll">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.content %}
+                        <div class="p-4 mt-2 {% if message.sender == 'candidate' %}bubble right{% else %}bubble left{% endif %}">
+                            {{ message.content }}
+                            <br>
+                            <span class="fade-txt text-end">{{ message.timestamp }}</span>
+                        </div>
+                    {% else %}
+                        <div class="interview-sizing p-3 mt-2 d-flex flex-column align-items-center border rounded ms-auto position-relative {% if message.status == 1 %}border-danger{% elif message.status == 2 %}border-success{% else %}dark-border{% endif %}">
+                            <div class="d-flex flex-row">
+                                <h5 class="text-center dark-txt">{{ message.title }}</h5>
+                            </div>
+                            <p class="dark-txt">Nous vous proposons</p>
+                            <p class="dark-txt">Type d'entretien : {{ message.interview_category }}</p>
+                            <p class="dark-txt">Le : {{ message.date }}</p>
+                            <div class="d-flex flex-column align-items-center">
+                                {% if message.status == 1 %}
+                                    <h3 class="text-danger fw-bold">Refusé</h3>
+                                {% elif message.status == 2 %}
+                                    <h3 class="text-success fw-bold">Accepté</h3>
+                                {% else %}    
+                                    <button class="btn secondary-btn" onclick="fill_agreement_modal({{ message.id }})" data-bs-toggle="modal" data-bs-target="#confirm_interview">Accepter</button>
+                                    <button class="btn" onclick="fill_rejection_modal({{ message.id }})" data-bs-toggle="modal" data-bs-target="#reject_interview">Refuser</button>
+                                {% endif %}    
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <div class="h-100 d-flex justify-content-center align-items-center">
+                    <h3 class="fw-bold">Aucun message pour le moment</h3>
+                </div>
+            {% endif %}
+        </div>
+        
+        <form autocomplete="off" action="/chat/candidate?employeeId={{ employee.id }}" class="sizing d-flex flex-row mt-5 " enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {{ msgform.contentField }}
+            <button class="btn secondary-btn" type="submit">&#x2191;</button>
+        </form>
+    </div>
+    
+    {% if interviews %}
+    <!-- Mobile carousel -->
+    <div class="dark-bg d-lg-none w-100">
+        <div id="interviewsCarousel" class="carousel slide py-3" data-bs-ride="carousel" data-bs-touch="true" data-bs-interval="5000">
+            <div class="text-white text-center mb-2">
+                <h3>Prochains Entretiens</h3>
+            </div>
+            <div class="carousel-inner">
+                {% for interview in interviews %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="d-flex justify-content-center">
+                        
+                        <div class="container border border-white rounded mx-2 py-3 text-white ">
+                            <div class="text-center">
+                                <h5 class="mb-2">Entretien {{ interview.interview_category }}</h5>
+                                <p class="mb-0">Le {{ interview.date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                {% endfor %}
+            </div>
+            {% if interviews|length > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#interviewsCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#interviewsCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="modal fade" id="confirm_interview" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Etes vous sûr de vouloir accepter cet entretien ?</h5>
+                        <p class="mb-0">Vous serez tenu d'assister à l'entretien, de plus vous ne pourrez pas annuler l'entretien après l'avoir accepté ...</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex flex-column">
+                        <form action="/chat/update_interview_status" class="d-flex flex-column w-50" method="post" enctype="multipart/form-data" id="interview_agreement_form">
+                            {% csrf_token %}
+                            {{ editinterviewstatusform.interviewId }}
+                            {{ editinterviewstatusform.status }}
+                            
+                            <button type="submit" class="btn secondary-btn" id="submit_agreement">Oui</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal">Non</button>
+                            
+                        </form>
+                        
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+        <script>
+            
+            function fill_agreement_modal(interviewID){
+            
+                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
+                    document.querySelector("#interview_agreement_form #interviewId").value = interviewID; // Send the deletion url into the modal
+                    document.querySelector("#interview_agreement_form #status").value = 2; // Send the deletion url into the modal
+
+                }
+            
+            }
+            
+        </script>
+    
+    <div class="modal fade" id="reject_interview" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <div class="modal-body">
+                        <h5 class="modal-title">Etes vous sûr de vouloir refuser cet entretien ?</h5>
+                        <p class="mb-0">Vous ne pourrez pas revenir sur votre décision …</p>
+                    </div>
+                    
+                    <div class="modal-footer d-flex flex-column">
+                        <form action="/chat/update_interview_status" method="post" enctype="multipart/form-data" class="d-flex flex-column w-50" id="interview_deletion_form">
+                            {% csrf_token %}
+                            {{ editinterviewstatusform.interviewId }}
+                            {{ editinterviewstatusform.status }}
+                            <button type="submit" class="btn secondary-btn" id="submit_rejection">Oui</button>
+                            <button type="button" class="btn" data-bs-dismiss="modal">Non</button>
+                        </form>
+                    </div>
+                        
+                </div>
+            </div>
+        </div>
+        <script>
+            
+            function fill_rejection_modal(interviewID){
+            
+                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
+                    document.querySelector("#interview_deletion_form #interviewId").value = interviewID; // Send the deletion url into the modal
+                    document.querySelector("#interview_deletion_form #status").value = 1; // Send the deletion url into the modal
+
+                }
+            
+            }
+            
+        </script>
+    
+    </main>
+    
+    <script>
+        // Fonction pour scroller automatiquement jusqu'en bas
+        document.addEventListener('DOMContentLoaded', function () {
+            const container = document.getElementById('messages-container');
+            container.scrollTop = container.scrollHeight;
+        });
+    </script>
+
+{% endblock %}

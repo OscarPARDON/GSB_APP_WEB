@@ -1,124 +1,121 @@
 {% extends "base.html" %} <!-- Call of the HTML Head-->
 {% block content %} <!-- Application Form -->
-
-<style>
-
-    .errorlist li { /* Set the color for all the form error messages  */
-        color:red;
-    }
-
-</style>
     
-<main class="container bg-light my-2 pb-4 d-flex flex-column align-items-center">
+<main class="container my-2 pb-4 d-flex flex-column align-items-center">
+    <h1 class="fw-bold rounded my-5 text-center dark-txt">Votre Candidature</h1>
 
-    <h1 class="fw-bold bg-info text-white rounded mb-3 p-4">Votre Candidature</h1>
-
-    <div class="container bg-light p-4 border border-info rounded">
-    
+    <div class="container p-md-4 border rounded" style="border-color: #285a89 !important;">
         <form action="/application?postID={{ postID }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
         
-            <div class="container-fluid d-flex">
-                
-                <div class="container-fluid d-flex flex-column w-50 p-3">
-                    <div class="form-group mb-3 h-50">
-                        <label class="fw-bold" for="name">Nom</label>
-                        {{ form.name }}
-
-                        {% if form.name.errors %} <!-- If error occur with the field, display the erros -->
-                             {{ form.name.errors }}
-                        {% endif %}
+            <!-- Section nom/prénom/email/téléphone -->
+            <div class="container-fluid px-0">
+                <div class="row g-3">
+                    <!-- Première colonne -->
+                    <div class="col-12 col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="fw-bold dark-txt" for="name">Nom</label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                {{ form.name.errors }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="fw-bold dark-txt" for="firstname">Prénom</label>
+                            {{ form.firstname }}
+                            {% if form.firstname.errors %}
+                                {{ form.firstname.errors }}
+                            {% endif %}
+                        </div>
                     </div>
-                    
-                    <div class="form-group h-50">
-                        <label class="fw-bold" for="email">Email</label>
-                        {{ form.email }}
 
-                        {% if form.email.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.email.errors }}
-                        {% endif %}
+                    <!-- Deuxième colonne -->
+                    <div class="col-12 col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="fw-bold dark-txt" for="email">Email</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}
+                                {{ form.email.errors }}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group mb-3">
+                            <label class="fw-bold dark-txt" for="phone">Téléphone</label>
+                            {{ form.phone }}
+                            {% if form.phone.errors %}
+                                {{ form.phone.errors }}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-    
-                <div class="d-flex flex-column w-50 p-3"  >
+            </div>
+        
+            <!-- Section mots de passe -->
+            <div class="row g-3 mt-2">
+                <div class="col-12">
                     <div class="form-group mb-3">
-                        <label class="fw-bold" for="firstname">Prénom</label>
-                        {{ form.firstname }}
-
-                        {% if form.firstname.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.firstname.errors }}
+                        <label class="fw-bold dark-txt" for="password">Mot de passe</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            {{ form.password.errors }}
                         {% endif %}
                     </div>
                     
-                    <div class="form-group">
-                        <label class="fw-bold" for="phone">Téléphone</label>
-                        {{ form.phone }}
-
-                        {% if form.phone.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.phone.errors }}
-                        {% endif %}
+                    <div class="form-group mb-3">
+                        <label class="fw-bold dark-txt" for="confirm">Confirmer le mot de passe</label>
+                        {{ form.confirm }}
+                        <p id="password_matcherror" style="color: red; display: none">Les mots de passe ne correspondent pas !</p>
+                        <p id="password_conditionerror" style="color: red; display: none">Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscule, majuscule, un chiffre et un caractère spécial</p>
                     </div>
                 </div>
-                
             </div>
         
-            <div>
-                
-                <div class="form-group my-2 px-3">
-                    <label class="fw-bold" for="password">Mot de passe</label>
-                    {{ form.password }}
-
-                    {% if form.password.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.password.errors }}
-                    {% endif %}
+            <div class="row g-3 mt-2">
+                <div class="col-12">
+                    <div class="p-3 border rounded">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6 d-flex justify-content-center">
+                                <div class="form-group d-flex flex-column ms-3">
+                                    <label class="fw-bold mb-2 dark-txt" for="cv">Importez votre CV</label>
+                                    {{ form.cv }}
+                                    {% if form.cv.errors %}
+                                        {{ form.cv.errors }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="col-12 col-md-6 d-flex justify-content-center">
+                                <div class="form-group d-flex flex-column ms-3">
+                                    <label class="fw-bold mb-2 dark-txt" for="cover-letter">Importez votre lettre de motivation</label>
+                                    {{ form.cover_letter }}
+                                    {% if form.cover_letter.errors %}
+                                        {{ form.cover_letter.errors }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="form-group my-2 px-3">
-                    <label class="fw-bold" for="confirm">Confirmer le mot de passe</label>
-                    {{ form.confirm }}
-                    <p id="password_matcherror" style="color: red; display: none">Les mots de passe ne correspondent pas !</p>
-                    <p id="password_conditionerror" style="color: red;display: none">Le mot de passe doit contenir au moins 8 caractères dont au moins une minuscles, majuscules, un chiffres et un caractère spécial</p>
-                </div>
-                
             </div>
         
-            <div class="d-flex flex-row justify-content-evenly mt-4 py-3 border rounded">
-                
-                <div class="form-group my-2 d-flex flex-column">
-                    <label class="fw-bold" for="cv">Importez votre CV</label>
-                    {{ form.cv }}
-
-                    {% if form.cv.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.cv.errors }}
-                    {% endif %}
+            <!-- Boutons -->
+            <div class="row mt-4">
+                <div class="col-12 d-flex flex-column flex-md-row justify-content-center gap-3">
+                    <button class="btn btn-lg secondary-btn" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
                 </div>
-                
-                <div class="form-group my-2 d-flex flex-column">
-                    <label class="fw-bold" for="cover-letter">Importez votre lettre de motivation</label>
-                    {{ form.cover_letter }}
-
-                    {% if form.cover_letter.errors %} <!-- If error occur with the field, display the erros -->
-                            {{ form.cover_letter.errors }}
-                    {% endif %}
+                <div class="col-12 d-flex flex-column flex-md-row justify-content-center gap-3">
+                    <a class="btn rounded" href="/">Annuler</a>
                 </div>
-                
-            </div>
-        
-            <div class="d-flex flex-row justify-content-center mt-4">
-                <a class="btn btn-lg btn-secondary rounded me-5" href="/">Annuler</a>
-                <button class="btn btn-lg btn-success" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
             </div>
             
-            {% if form.non_field_errors %} <!-- If error occur with the form, display the errors -->
+            {% if form.non_field_errors %}
                 <div class="alert alert-danger mt-3" role="alert">
                     {{ form.non_field_errors }}
                 </div>
             {% endif %}
-        
         </form>
-
     </div>
-
 </main>
     
 <script>
