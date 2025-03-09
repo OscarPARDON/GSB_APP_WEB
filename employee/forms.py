@@ -8,7 +8,7 @@ from visitor.models import Publication
 
 # Form used to by the employee login system
 class EmployeeLoginForm(forms.Form):
-    employee_id = forms.EmailField(max_length=200,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Entrez votre identifiant'}),validators=[EmailValidator(message="Identifiant incorrect")]) # Employee Identifer (Mail)
+    employee_id = forms.EmailField(max_length=200,widget=forms.EmailInput(attrs={'class': 'form-control','placeholder':'Entrez votre identifiant'}),validators=[EmailValidator(message="Identifiant incorrect")]) # Employee Identifier (Mail)
     password = forms.CharField(max_length=200,widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Entrez votre mot de passe'})) # Employee password
 
 # Form used to update the status of an application
@@ -32,10 +32,10 @@ class NewEmployeeForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean() # Get the form data cleaned by the default clean function
 
-        email = cleaned_data.get('employee_email')
+        email = cleaned_data.get('employee_email') # Get the employee email
 
-        if Employee.objects.filter(employee_email=email).exists():
-            raise ValidationError("Un autre utilisateur utilise déja cet email.")
+        if Employee.objects.filter(employee_email=email).exists(): # If another employee already use this email ...
+            raise ValidationError("Un autre utilisateur utilise déja cet email.") # Raise form error
 
         firstname = cleaned_data.get('employee_firstname')  # Get the employee firstname cleaned by the default function
         lastname = cleaned_data.get('employee_lastname')  # Get the employee lastname cleaned by the default function
@@ -55,7 +55,7 @@ class UpdateEmployeeForm(forms.ModelForm):
         fields = ['employee_lastname','employee_firstname','employee_email','role'] # Fields to modify
 
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
-    employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FIrstname of the employee
+    employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FFirstname of the employee
     employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
     role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin'),('manager','Manager')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
 

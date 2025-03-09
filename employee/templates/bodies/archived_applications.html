@@ -1,10 +1,13 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Admin main page : Menu to let the user chose which module he wants to access -->
+{% block content %} <!-- Archives : Display all the archived posts with their applications -->
     
     <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2" >
-            <div></div>
-            <div class="ms-5 ps-3"><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ps-3">
+                <p class="text-white mb-0">{{ request.user.employee_lastname }} {{ request.user.employee_firstname }}</p>
+                <p class="text-white">{% if request.user.role == "admin" %}Administrateur{% elif request.user.role == "manager" %}Manager{% else %}Employé{% endif %}</p>
+            </div>
+            <div><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
     
@@ -70,7 +73,7 @@
             search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the value of the search field
             offers = Array.from(document.getElementsByClassName("card")); // Get all the posts
             offers_title = Array.from(document.getElementsByClassName("card-header")); // Get all the posts titles
-            emptySearch = true;
+            emptySearch = true; // Boolean to check if no post matches with the search
 
             offers.forEach((offer, index) => { // Verify that the post title match with the search value for all the posts
 
@@ -80,13 +83,13 @@
 
                 else{ // The search value match with the title
                     offer.style.display = 'block'; // Makes the post appear
-                    emptySearch = false
+                    emptySearch = false // At least one post match with the search so the search is not empty
                 }
                 
             })
 
-            if(emptySearch){
-                document.getElementById("emptySearch").style.display = 'flex';
+            if(emptySearch){ // If no post matches the search
+                document.getElementById("emptySearch").style.display = 'flex'; // Display a "no results" message
             }
             else{
                 document.getElementById("emptySearch").style.display = 'none';
@@ -94,9 +97,7 @@
         }
 
         document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value of the search field changes
-
-
+        
     </script>
-
-
+    
 {% endblock %}

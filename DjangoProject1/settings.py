@@ -90,7 +90,7 @@ WSGI_APPLICATION = 'DjangoProject1.wsgi.application' # WSGI of the applications
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 DATABASES = {
     'default': { # Default Database
-        'ENGINE': '', # Engine used by the DB
+        'ENGINE': 'django.db.backends.mysql', # Engine used by the DB
         'NAME': '', # Name of the DB
         'USER': '', # Username to connect to the DB
         'PASSWORD': '', # Password to connect to the DB

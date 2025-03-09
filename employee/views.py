@@ -16,14 +16,16 @@ from .forms import EmployeeLoginForm, NewEmployeeForm, UpdateEmployeeForm, Updat
 from .models import Employee # Import Employee Model
 ##############################################################################################
 
+# This function deletes all the interviews linked to a thread
 def clear_interviews(application_number,employee_id):
-    if Thread.objects.filter(candidate_id=application_number,employee_id=employee_id).exists():
-        thread = Thread.objects.get(candidate_id=application_number, employee_id=employee_id)
-        interviews = Interview.objects.filter(thread=thread)
-        if interviews :
-            for interview in interviews:
+    if Thread.objects.filter(candidate_id=application_number,employee_id=employee_id).exists(): # Verify if the thread exists
+        thread = Thread.objects.get(candidate_id=application_number, employee_id=employee_id) # Get the thread
+        interviews = Interview.objects.filter(thread=thread) # Get the interviews
+        if interviews : # If there are interviews in the thread
+            for interview in interviews: # Delete all the interviews
                 interview.delete()
 
+# This function delete a candidate
 def delete_candidate(application_number):
     # Delete the candidate's files and delete the candidate's directory
     dir_path = Path(settings.STATICFILES_DIRS[0]) / 'files' / application_number  # Construction of the path to the candidate's directory
@@ -36,12 +38,14 @@ def delete_candidate(application_number):
         os.rmdir(dir_path)  # Delete the candidate's directory
 
     # Delete the application from the database
-    application = get_object_or_404(Application,application_number=application_number)  # Get the application or send 404 error if it's not found in the databse
+    application = get_object_or_404(Application,application_number=application_number)  # Get the application or send 404 error if it's not found in the database
 
-    send_email('deletion_confirmation_email.html', {'job_offer': application.job_publication.title},[application.candidate_mail])
+    send_email('deletion_confirmation_email.html', {'job_offer': application.job_publication.title},[application.candidate_mail]) # Send an email to the candidate to inform that his application was deleted
 
     application.delete()  # Delete the application from the database
     return redirect('/')  # Redirection to the visitor page
+
+###############################################################################################################################
 
 def employee_login(request): # This views manages the employee login process
 
@@ -87,7 +91,7 @@ def employee_change_password(request): # The view manages the employees password
                 user.first_connexion = False # Set the first connection value to NULL for this user
                 user.save() # Save the changes in the database
 
-                send_email("confirm_password_change_email.html",{},[user.employee_email])
+                send_email("confirm_password_change_email.html",{},[user.employee_email]) # Sends an email to confirm the password modification
 
                 return redirect('employee_login') # Redirect to the employees login page
         else : # If no form data was received ...
@@ -152,7 +156,7 @@ def status_modification(request): # This view manages the modification of an app
         application.status = new_status # Replace the application status with the new one
         application.save() # Save the modifications in the database
 
-        send_email("status_update_email.html",{'status': new_status, 'job_offer':application.job_publication.title},[application.candidate_mail])
+        send_email("status_update_email.html",{'status': new_status, 'job_offer':application.job_publication.title},[application.candidate_mail]) # Send an email to inform the candidate of the verdict
 
     previous_url = request.META.get('HTTP_REFERER', '/employee/hub') # Get the previous URL (offer applications)
     if "/chat/employee" in previous_url:
@@ -203,7 +207,7 @@ def new_employee(request): # This view is for creating a new employee
                 )
                 insertion.save()  # Save the employee in the users database
 
-                send_email("new_employee_email.html",{'token': token},[email])
+                send_email("new_employee_email.html",{'token': token},[email]) # Send an email to inform the new employee that his account was created and to communicate the password
 
                 return redirect('user_management') # Redirect to the user management page
 
@@ -300,10 +304,10 @@ def delete_publication(request): # This view delete a publication
             application_emails = Application.objects.filter(job_publication=publication).values_list('candidate_mail', flat=True) # Get all the emails of the applications on this post
             email_list = list(application_emails) # Create a list with all the collected email
 
-            send_email('publication_deletion_email.html',{'publication_name':publication.title},email_list)
+            send_email('publication_deletion_email.html',{'publication_name':publication.title},email_list) # Send an email to inform the candidates that the publication was deleted
 
-            applications = Application.objects.filter(job_publication=publication)
-            for application in applications:
+            applications = Application.objects.filter(job_publication=publication) # Get all the applications of publication
+            for application in applications: # Delete all the applications
                 delete_candidate(application.application_number)
 
             publication.delete() # Delete the publication from the database
@@ -325,121 +329,121 @@ def reset_employee_password(request): # This view manages the password reset of 
             user.password = make_password(token) # Set the temporary password
             user.save() # Save the password in the database
 
-            send_email('employee_password_reset_email.html',{'token': token},[user.employee_email])
+            send_email('employee_password_reset_email.html',{'token': token},[user.employee_email]) # Sends an email to communicate the reset link
 
             return redirect('user_management') # Redirect the user management page
     return redirect('application_management') # If the user is not an admin, redirect to the employees page
 
 
-def validated_applications(request):
-    if request.user.role in ["admin", "manager"]:
-        publications = Publication.objects.filter(archived=0)
-        data = []
+def validated_applications(request): # This view manage the page that displays all the validated applications
+    if request.user.role in ["admin", "manager"]: # If the user is an admin or a manager ...
+        publications = Publication.objects.filter(archived=0) # Get the publications that are not archived
+        data = [] # Table to store all the data that will be displayed
 
-        for publication in publications:
-            applications = Application.objects.filter(job_publication_id=publication.id, status=3)
-            no_available_applications = not applications.exists()
+        for publication in publications: # For each publication
+            applications = Application.objects.filter(job_publication_id=publication.id, status=3) # Get the validated applications of the publication
+            no_available_applications = not applications.exists() # If the publication has no validated applications, set the no_application boolean to true
 
-            applications_with_unread_count = []
-            for application in applications:
+            applications_with_unread_count = [] # Table to store the unread message count for each application
+            for application in applications: # For each validated application
                 try:
-                    thread = Thread.objects.get(candidate=application.application_number, employee=request.user.id)
-                    unread_count = Message.objects.filter(thread=thread, is_read=0, sender="candidate").count()
-                except Thread.DoesNotExist:
-                    unread_count = 0
-                setattr(application, 'unread_count', unread_count)
+                    thread = Thread.objects.get(candidate=application.application_number, employee=request.user.id) # Get the thread
+                    unread_count = Message.objects.filter(thread=thread, is_read=0, sender="candidate").count() # Get the unread message count
+                except Thread.DoesNotExist: # If the thread doesn't exist ...
+                    unread_count = 0 # The unread count is 0
+                setattr(application, 'unread_count', unread_count) # Append the unread_count into the application element
                 applications_with_unread_count.append(application)
 
-            publication_data = {
+            publication_data = { # Add new elements to the publication
                 'title': publication.title,
                 'noAvailableApplications': no_available_applications,
                 'applications': applications_with_unread_count,
             }
-            data.append(publication_data)
+            data.append(publication_data) # Append the publication into the displayed data
 
-        return render(request, 'bodies/validated_applications.html', {"publications": data})
+        return render(request, 'bodies/validated_applications.html', {"publications": data}) # Call the page
 
-    return redirect('application_management')
+    return redirect('application_management') # Redirect to the application management page if the user is not allowed
 
-def archive_publication(request):
-    if request.user.role == "admin" :
-        postId = request.GET.get('postID', '')
-        if postId and postId.isdigit() and Publication.objects.filter(id=postId,archived=0).exists():
-            publication = Publication.objects.get(id=postId)
-            applications = Application.objects.filter(job_publication=publication)
+def archive_publication(request): # This view archive a publication
+    if request.user.role == "admin" : # If the user is an admin ...
+        postId = request.GET.get('postID', '') # Get the id of the post
+        if postId and postId.isdigit() and Publication.objects.filter(id=postId,archived=0).exists(): # If the post id is valid ...
+            publication = Publication.objects.get(id=postId) # Get the post
+            applications = Application.objects.filter(job_publication=publication) # Get the applications of the post
 
-            for application in applications:
-                clear_interviews(application.application_number,request.user.id)
-                if application.status == 0 or application.status == 1:
-                    delete_candidate(application.application_number)
-                else :
-                    application.status = 4
+            for application in applications: # For each application
+                clear_interviews(application.application_number,request.user.id) # Clear the interviews in the thread
+                if application.status == 0 or application.status == 1: # If the application is rejected or waiting review
+                    delete_candidate(application.application_number) # Delete the application
+                else : # If the application was validated ...
+                    application.status = 4 # Keep the application and set its status to archived
                     application.save()
 
-            if not Application.objects.filter(job_publication=publication).exists():
-                publication.delete()
-            else :
-                publication.archived = 1
+            if not Application.objects.filter(job_publication=publication).exists(): # If the publication has no validated applications
+                publication.delete() # Delete the publication
+            else : # If the publication has validated applications
+                publication.archived = 1 # Set the archive boolean to true
                 publication.save()
 
-        return redirect('publication_management')
-    return redirect('employee_hub')
+        return redirect('publication_management') # Redirect to the publication management page
+    return redirect('employee_hub') # If the user is not allowed, redirect to the employees hub
 
-def archived_applications(request):
-    if request.user.role in ["admin", "manager"]:
-        publications = Publication.objects.filter(archived=1)
-        data = []
+def archived_applications(request): # This view manage the archive page
+    if request.user.role in ["admin", "manager"]: # If the user is an admin or a manager
+        publications = Publication.objects.filter(archived=1) # Get the archived publications
+        data = [] # Create an tab that will contain the displayed data
 
-        for publication in publications:
-            applications = Application.objects.filter(job_publication_id=publication.id)
+        for publication in publications: # For each publication
+            applications = Application.objects.filter(job_publication_id=publication.id) # Get the applications
 
-            publication_data = {
+            publication_data = { # Merge the applications into the publication element
                 'title': publication.title,
                 'applications': applications,
             }
-            data.append(publication_data)
+            data.append(publication_data) # Append the new element into the displayed data tab
 
-        return render(request, 'bodies/archived_applications.html', {"publications": data})
+        return render(request, 'bodies/archived_applications.html', {"publications": data}) # Call the page
 
-    return redirect('application_management')
+    return redirect('application_management') # If the user is not allowed, redirect to the application management page
 
-def archived_application_info(request):
-    if request.user.role in ["admin","manager"] :
+def archived_application_info(request): # This view manages the archived application detail page
+    if request.user.role in ["admin","manager"] : # If the user is an admin or a manager
 
-        candidateId = request.GET.get('candidateID', '')
+        candidateId = request.GET.get('candidateID', '') # Get the candidate id
 
-        if not candidateId or not (candidateId.isdigit() and Application.objects.filter(application_number=candidateId).exists()):
-            return redirect('/employee/logout')
+        if not candidateId or not (candidateId.isdigit() and Application.objects.filter(application_number=candidateId).exists()): # If the id is not valid ...
+            return redirect('/employee/logout') # Kick the user
 
-        candidate = Application.objects.get(application_number=candidateId)
-        employee = Employee.objects.get(id=request.user.id)
+        candidate = Application.objects.get(application_number=candidateId) # Get the candidate
+        employee = Employee.objects.get(id=request.user.id) # Get the employee
 
-        if Thread.objects.filter(candidate_id=candidate.application_number, employee_id=employee.id).exists():
+        if Thread.objects.filter(candidate_id=candidate.application_number, employee_id=employee.id).exists(): # If the thread exists
 
-            thread = Thread.objects.get(candidate_id=candidate.application_number, employee_id=employee.id)
-            encryption_key = get_encryption_key(thread)
+            thread = Thread.objects.get(candidate_id=candidate.application_number, employee_id=employee.id) # Get the thread
+            encryption_key = get_encryption_key(thread) # Get the encryption key of the thread
 
-            messages = Message.objects.filter(thread=thread).order_by('timestamp')
+            messages = Message.objects.filter(thread=thread).order_by('timestamp') # Get the messages of the thread
 
-            for item in messages:
-                try:
-                    item.content = decrypt_message(item.content, encryption_key)
-                except Exception:
-                    item.content = "[Message corrompu ou clé incorrecte]"
+            for item in messages: # For each message
+                try: # Try to decrypt the message
+                    item.content = decrypt_message(item.content, encryption_key) # Message decryption
+                except Exception: # If the message can't be decrypted
+                    item.content = "[Message corrompu ou clé incorrecte]" # Display an decryption error in the message
 
-        else :
-            messages = []
+        else : # If there are no messages ...
+            messages = [] # Create an empty tab to avoid errors because the value is unexisting
 
-        return render(request, 'bodies/archived_application_info.html',{'messages': messages, 'application': candidate})
-    return redirect('/employee/hub')
+        return render(request, 'bodies/archived_application_info.html',{'messages': messages, 'application': candidate}) # Call the page
+    return redirect('/employee/hub') # If the user is not allowed, redirect to the employees' main page
 
-def application_delete(request):
-    if request.user.role == "admin":
-        candidateId = request.GET.get('candidateID', '')
-        if candidateId and candidateId.isdigit() and Application.objects.filter(application_number=candidateId).exists():
-            if  Application.objects.get(application_number=candidateId).status == 4:
-                delete_candidate(candidateId)
-        return redirect('/employee/archived_applications')
-    return redirect("/employee/hub")
+def application_delete(request): # This view manage the deletion of an application
+    if request.user.role == "admin": # If the user is an admin
+        candidateId = request.GET.get('candidateID', '') # Get the candidate id
+        if candidateId and candidateId.isdigit() and Application.objects.filter(application_number=candidateId).exists(): # If the id is valid ...
+            if  Application.objects.get(application_number=candidateId).status == 4: # If the application is archived ...
+                delete_candidate(candidateId) # Delete the application
+        return redirect('/employee/archived_applications') # Redirect to the archived application page
+    return redirect("/employee/hub") # If the user is not allowed, redirect to the employees' hub
 
 

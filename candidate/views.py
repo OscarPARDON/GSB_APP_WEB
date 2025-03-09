@@ -2,20 +2,16 @@ import os # Import Python Operating System Management Module
 from pathlib import Path # Import File Path Management Module
 from secrets import token_hex
 from threading import Thread
-
 from django.conf import settings # Import Settings Variables
 from django.contrib.auth import authenticate, login, logout # Import Django Authentication Module
 from django.contrib.auth.hashers import make_password
 from django.http import Http404, FileResponse # Import Django HTTP Module
 from django.shortcuts import render, redirect, get_object_or_404 # Shortcut to import some Django Modules
-
 from mailing.wsgi import send_email
 from .forms import ApplicationLoginForm, ApplicationUpdateForm, \
     CandidateEmailForm, ApplicationNumberForm, CandidateChangePasswordForm  # Import the Login and Update Forms
 from .models import Application # Import the Application Model
 from conversation.models import Thread, Message, Interview
-
-
 ######################################################################################################################
 
 def candidate_login(request): # This views manages the candidates login process
@@ -39,7 +35,7 @@ def candidate_login(request): # This views manages the candidates login process
 
     else: # If no form data is received
 
-        #Application Number autocompletion if the user access the login via the success application submition page
+        #Application Number autocompletion if the user access the login via the success application submission page
         application_number = request.GET.get('application_number', '') # Try to collect the application number in the URL
         if application_number: # If an application number is passed in the URL
             form = ApplicationLoginForm(initial={'application_number': application_number}) # Autocomplete Application Number in the login form
@@ -59,10 +55,10 @@ def candidate_hub(request): # This view manages the candidate's main page
 
     # Get the data needed for the view
     application = request.user # Get the candidate's data
-    threads = Thread.objects.filter(candidate=application.application_number)[:5]
+    threads = Thread.objects.filter(candidate=application.application_number)[:5] # Get the user's discussions (max 5)
 
-    for thread in threads:
-        thread.unread_count = Message.objects.filter(thread=thread,sender="employee",is_read=False).count() + Interview.objects.filter(thread=thread,is_read=False).count()
+    for thread in threads: # For each discussion ...
+        thread.unread_count = Message.objects.filter(thread=thread,sender="employee",is_read=False).count() + Interview.objects.filter(thread=thread,is_read=False).count() # Calculate the number of unread messages
 
     # Checking the availability of the candidate's files
     dir_path = Path(settings.STATICFILES_DIRS[0]) / 'files' / application.application_number # Path to the candidate's files directory
@@ -112,9 +108,9 @@ def candidate_delete(request): # This views manages the application deletion
         os.rmdir(dir_path) # Delete the candidate's directory
 
     # Delete the application from the database
-    application = get_object_or_404(Application, application_number=application_number) # Get the application or send 404 error if it's not found in the databse
+    application = get_object_or_404(Application, application_number=application_number) # Get the application or send 404 error if it's not found in the database
 
-    send_email('deletion_confirmation_email.html',{'job_offer':application.job_publication.title},[application.candidate_mail])
+    send_email('deletion_confirmation_email.html',{'job_offer':application.job_publication.title},[application.candidate_mail]) # Send an email to confirm deletion
 
     logout(request) # Log the user out before deletion
     application.delete() # Delete the application from the database
@@ -123,8 +119,8 @@ def candidate_delete(request): # This views manages the application deletion
 def candidate_update(request): # This view manage the modification of an application
     application = get_object_or_404(Application, application_number=request.user.application_number) # Get the candidate's application from the database
 
-    if application.status not in [1, 3]:
-        return redirect("/candidate/hub")
+    if application.status not in [1, 3]: # The status must be between 1 & 3 (1 : waiting review, 2 : refused, 3 : accepted)
+        return redirect("/candidate/hub") # If the status is not valid, redirection to the candidates' main page
 
     if request.method == 'POST': # If form data is received
 
@@ -143,7 +139,7 @@ def candidate_update(request): # This view manage the modification of an applica
                     for chunk in cv_file.chunks():
                         destination.write(chunk)
 
-            if 'cover_letter' in request.FILES: # If a new cover lletter file is received ...
+            if 'cover_letter' in request.FILES: # If a new cover letter file is received ...
                 coverletter_file = request.FILES['cover_letter'] # get the input file
                 with open(files_dir / f"coverletter{Path(coverletter_file.name).suffix}", 'wb+') as destination: # Save the file in the directory
                     for chunk in coverletter_file.chunks():
@@ -164,10 +160,10 @@ def forgot_application_number(request): # This function manage the forgot applic
                 application = Application.objects.filter(candidate_mail=form.cleaned_data['email']) # Get the application corresponding to the email
 
                 has_multiple_applications = 0
-                if len(application) > 1 :
+                if len(application) > 1 : # Check if the user has multiple applications
                     has_multiple_applications = 1
 
-                send_email('forgot_application_number_email.html',{'application': application, 'has_multiple_applications':has_multiple_applications},[form.cleaned_data['email']])
+                send_email('forgot_application_number_email.html',{'application': application, 'has_multiple_applications':has_multiple_applications},[form.cleaned_data['email']]) # Send an email with the application number(s)
 
             return render(request,'bodies/sent_confirmation.html',{'content':'numéro de candidature','email':form.cleaned_data['email']}) # Call the email confirmation page
     else: # If no form data is received ...
@@ -184,7 +180,7 @@ def forgot_password(request): # This function manages the forgot password form
                 application.password_reset_token = password_reset_token # Set the reset token password
                 application.save() # Save the reset token password token in the database
 
-                send_email('reset_password_email.html',{'password_reset_token': password_reset_token, 'application_number': form.cleaned_data['application_number'], 'job_offer':application.job_publication.title},[application.candidate_mail])
+                send_email('reset_password_email.html',{'password_reset_token': password_reset_token, 'application_number': form.cleaned_data['application_number'], 'job_offer':application.job_publication.title},[application.candidate_mail]) # Send an email containing the reset link
             return render(request,'bodies/sent_confirmation.html',{'content':'lien de réinitialisation du mot de passe'}) # Call the email confirmation page
     else: # If no from data is received ...
         form = ApplicationNumberForm() # Create an empty form
@@ -203,7 +199,7 @@ def reset_password(request): # This function manage the candidate password reset
                     application.candidate_password = make_password(form.cleaned_data['password']) # Set the new password
                     application.save() # Save new password in the database
 
-                    send_email('confirm_password_change_email.html',{'job_offer':application.job_publication.title},[application.candidate_mail])
+                    send_email('confirm_password_change_email.html',{'job_offer':application.job_publication.title},[application.candidate_mail]) # Send an email to confirm that the password was reset
                     return redirect('/candidate/login') # Redirect to the user page
             else: # If no form data is received
                 form = CandidateChangePasswordForm() # Create an empty form

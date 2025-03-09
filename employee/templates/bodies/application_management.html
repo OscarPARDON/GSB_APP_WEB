@@ -1,6 +1,6 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Employees Main Page : Page that displays all the current offers and enable the user to access to the applications tables pages -->
+{% block content %} <!-- Page that displays all the current offers and enable the user to access to the applications tables pages -->
 
     <style>
     
@@ -26,20 +26,19 @@
         .card-header {
             height: 20%;
             max-width: 100%;
-            white-space: nowrap;     /* Empêche le texte de passer à la ligne */
-            overflow: hidden;        /* Cache le texte qui dépasse */
-            text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
         }
 
         .card-body::-webkit-scrollbar {
           display: none;
         }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
+        
         .card-body {
             height: 80%;
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none; 
             overflow: scroll;
         }
         
@@ -51,8 +50,11 @@
     </style>
     
     <header class="dark-bg border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
-            <div></div>
-            <div class="ms-5 ps-3"><a href="{%if request.user.role == 'admin' or request.user.role == 'manager' %}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ps-3">
+                <p class="text-white mb-0">{{ request.user.employee_lastname }} {{ request.user.employee_firstname }}</p>
+                <p class="text-white">{% if request.user.role == "admin" %}Administrateur{% elif request.user.role == "manager" %}Manager{% else %}Employé{% endif %}</p>
+            </div>
+            <div><a href="{%if request.user.role == 'admin' or request.user.role == 'manager' %}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
     
@@ -103,15 +105,15 @@
     
         // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
         function search() {
-            const search_value = document.getElementById("search_bar").value.toLowerCase();
-            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Cibler les colonnes
-            const offers_title = Array.from(document.getElementsByClassName("card-header"));
+            const search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the value of the search bar
+            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Get all the post containers
+            const offers_title = Array.from(document.getElementsByClassName("card-header")); // Get the title of all the posts
             
-            containers.forEach((container, index) => {
-                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){
-                    container.style.display = 'none';
+            containers.forEach((container, index) => { // For each posts
+                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){ // Compare the title & the search value
+                    container.style.display = 'none'; // If the values don't match : vanish the post
                 } else {
-                    container.style.display = 'block';
+                    container.style.display = 'block'; // If the values match : display the post
                 }
             });
         }

@@ -9,7 +9,7 @@ class GlobalAuthBackend(BaseBackend):
     # Global Authentication Method
     def authenticate(self, request, application_number=None, employee_id=None, password=None, **kwargs):
 
-        # Candidatess login system
+        # Candidates login system
         if application_number: # If an application number is received, the candidate login system is selected
 
             try: # Login attempt with the received credentials

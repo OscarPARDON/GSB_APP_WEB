@@ -1,9 +1,9 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+{% block content %} <!-- Chat page for candidates -->
 
     <style>
-        .bubble {
+        .bubble { /* Message bubble style */
             --r: 1em;  /* the radius */
             --t: 1.5em; /* the size of the tail */
             max-width: 300px;
@@ -79,7 +79,6 @@
     
     <main class="d-flex flex-column flex-lg-row secondary-bg">
     {% if interviews %}
-    <!-- Desktop sidebar -->
     <div class="dark-bg d-none d-lg-flex flex-column align-items-center px-3 text-white flex-shrink-0 w-25" style="padding-top: 9%">
         <h3>Prochains Entretiens</h3>
         {% for interview in interviews %}
@@ -137,7 +136,6 @@
     </div>
     
     {% if interviews %}
-    <!-- Mobile carousel -->
     <div class="dark-bg d-lg-none w-100">
         <div id="interviewsCarousel" class="carousel slide py-3" data-bs-ride="carousel" data-bs-touch="true" data-bs-interval="5000">
             <div class="text-white text-center mb-2">
@@ -200,14 +198,13 @@
         </div>
         <script>
             
-            function fill_agreement_modal(interviewID){
+            function fill_agreement_modal(interviewID){ // This function auto-fill the modal to confirm an interview
             
-                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
-                    document.querySelector("#interview_agreement_form #interviewId").value = interviewID; // Send the deletion url into the modal
-                    document.querySelector("#interview_agreement_form #status").value = 2; // Send the deletion url into the modal
+                if(interviewID && Number.isInteger(interviewID)){ // If the Interview ID is set and has the right format ...
+                    document.querySelector("#interview_agreement_form #interviewId").value = interviewID; // Send the url into the modal
+                    document.querySelector("#interview_agreement_form #status").value = 2; // Send the url into the modal
 
                 }
-            
             }
             
         </script>
@@ -218,7 +215,7 @@
                     
                     <div class="modal-body">
                         <h5 class="modal-title">Etes vous sûr de vouloir refuser cet entretien ?</h5>
-                        <p class="mb-0">Vous ne pourrez pas revenir sur votre décision …</p>
+                        <p class="mb-0">Vous ne pourrez pas revenir sur votre décision…</p>
                     </div>
                     
                     <div class="modal-footer d-flex flex-column">
@@ -236,14 +233,13 @@
         </div>
         <script>
             
-            function fill_rejection_modal(interviewID){
+            function fill_rejection_modal(interviewID){ // This function auto-fill the modal to confirm the rejection of an interview
             
-                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
-                    document.querySelector("#interview_deletion_form #interviewId").value = interviewID; // Send the deletion url into the modal
-                    document.querySelector("#interview_deletion_form #status").value = 1; // Send the deletion url into the modal
+                if(interviewID && Number.isInteger(interviewID)){ // If the interview ID is set and has the right format ...
+                    document.querySelector("#interview_deletion_form #interviewId").value = interviewID; // Send the url into the modal
+                    document.querySelector("#interview_deletion_form #status").value = 1; // Send the url into the modal
 
                 }
-            
             }
             
         </script>
@@ -251,10 +247,10 @@
     </main>
     
     <script>
-        // Fonction pour scroller automatiquement jusqu'en bas
-        document.addEventListener('DOMContentLoaded', function () {
-            const container = document.getElementById('messages-container');
-            container.scrollTop = container.scrollHeight;
+        // This function auto scroll to the bottom of the conversation when the page is loaded
+        document.addEventListener('DOMContentLoaded', function () { // Listener : When the page loads ...
+            const container = document.getElementById('messages-container'); // Get the conversation container
+            container.scrollTop = container.scrollHeight; // Scroll to the bottom
         });
     </script>
 

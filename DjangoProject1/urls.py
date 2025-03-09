@@ -10,5 +10,5 @@ urlpatterns = [
     path('', include('visitor.urls')), # Default : URL for the visitor part
     path('candidate/', include('candidate.urls')), # URL for the candidate part
     path('employee/', include('employee.urls')), # URL for the employee part
-    path('chat/',include('conversation.urls')),
+    path('chat/',include('conversation.urls')), # URL to the chatting module
 ]

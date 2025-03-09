@@ -8,10 +8,9 @@
         <form action="/application?postID={{ postID }}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
         
-            <!-- Section nom/prénom/email/téléphone -->
+            <!-- Section lastname, firstname, email, telephone -->
             <div class="container-fluid px-0">
                 <div class="row g-3">
-                    <!-- Première colonne -->
                     <div class="col-12 col-md-6">
                         <div class="form-group mb-3">
                             <label class="fw-bold dark-txt" for="name">Nom</label>
@@ -30,7 +29,6 @@
                         </div>
                     </div>
 
-                    <!-- Deuxième colonne -->
                     <div class="col-12 col-md-6">
                         <div class="form-group mb-3">
                             <label class="fw-bold dark-txt" for="email">Email</label>
@@ -51,7 +49,7 @@
                 </div>
             </div>
         
-            <!-- Section mots de passe -->
+            <!-- Section password -->
             <div class="row g-3 mt-2">
                 <div class="col-12">
                     <div class="form-group mb-3">
@@ -99,7 +97,6 @@
                 </div>
             </div>
         
-            <!-- Boutons -->
             <div class="row mt-4">
                 <div class="col-12 d-flex flex-column flex-md-row justify-content-center gap-3">
                     <button class="btn btn-lg secondary-btn" type="submit" id="submit_btn" name="submit-application">Soumettre</button>
@@ -122,25 +119,25 @@
 
     function validatePasswords() { // Javascript function to check if the password and confirm fields are the same
         
-        confirm = document.getElementById("confirm").value; // get value of the confirm field
+        confirm = document.getElementById("confirm").value; // get value of the "confirm" field
         password = document.getElementById("password").value; // get value of the password field
         submitBtn = document.getElementById("submit_btn"); // get the submit button element
         error = document.getElementById("password_matcherror"); // get the displayed error element
 
-        if (confirm !== '' && confirm !== password) { //If confirm's field value isn't empty and isn't the same as password's field value ...
+        if (confirm !== '' && confirm !== password) { //If "confirm"'s field value isn't empty and isn't the same as password's field value ...
             submitBtn.disabled = true; // Disable the submit button
             error.style.display = 'block'; // Display the error element
         } else {
             submitBtn.disabled = false; // Enable the Submit Button
-            error.style.display = 'none'; // Make the error element disapear
+            error.style.display = 'none'; // Make the error element disappear
         }
         
     }
 
-    document.getElementById("confirm").addEventListener('change', validatePasswords); // Listner, activates if the fields's value changes
-    document.getElementById("password").addEventListener('change', validatePasswords); // Listner, activates if the fields's value changes
+    document.getElementById("confirm").addEventListener('change', validatePasswords); // Listener, activates if the fields's value changes
+    document.getElementById("password").addEventListener('change', validatePasswords); // Listener, activates if the fields's value changes
     
-    document.getElementById("password").addEventListener('change', function (e){ // Listner, activates if the fields's value changes
+    document.getElementById("password").addEventListener('change', function (e){ // Listener, activates if the fields's value changes
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/; // Regex for password condition
         
         if(regex.test(document.getElementById("password").value)){ // If the password's field value meets the conditions ..

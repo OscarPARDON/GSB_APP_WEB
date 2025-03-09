@@ -19,7 +19,6 @@
     <main class="container-fluid p-0 pt-5 d-flex flex-column">
         <div class="row m-0" >
             {% if application.status == 3 %}
-            <!-- Conversations - Desktop/Tablet view -->
             <div class="col-md-4 col-lg-3 dark-bg px-3 text-white py-5 d-none d-md-block">
                 <h3 class="mb-4">Vos Conversations</h3>
                 {% if threads %}
@@ -48,8 +47,7 @@
                     </p>
                 {% endif %}
             </div>
-    
-            <!-- Conversations - Mobile Carousel -->
+                
             <div class="col-12 d-md-none px-0">
                 <div class="dark-bg py-3">
                     <h3 class="text-white text-center mb-3">Vos Conversations</h3>
@@ -90,11 +88,9 @@
                 </div>
             </div>
             {% endif %}
-    
-            <!-- Main content -->
+        
             <div class="col-md-8 col-lg-9 h-100 flex-grow-1 mt-4">
                 <div class="container-fluid py-5 h-100 d-flex flex-column">
-                    <!-- Header -->
                     <div class="row mb-4">
                         <div class="col-12">
                             <div class="text-center">
@@ -103,8 +99,7 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- Job info -->
+                
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="alert alert-success">
@@ -112,8 +107,7 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- Status alerts -->
+                
                     <div class="row mb-3">
                         <div class="col-12">
                             {% if request.user.status == 1 %}
@@ -135,9 +129,7 @@
                             {% endif %}
                         </div>
                     </div>
-    
-                    <!-- Le reste des sections (Contact, Files, Actions) avec la même structure -->
-                    <!-- Contact info -->
+
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="border p-4 rounded">
@@ -159,9 +151,7 @@
                             </div>
                         </div>
                     </div>
-
-    
-                    <!-- Files -->
+                
                     <div class="row mb-3">
                         <div class="col-12">
                             <div class="border p-4 rounded">
@@ -185,8 +175,7 @@
                             </div>
                         </div>
                     </div>
-    
-                    <!-- Actions -->
+                
                     <div class="row">
                         <div class="col-12">
                             <div class="border p-4 rounded">
@@ -210,9 +199,7 @@
             </div>
         </div>
     </main>
-        
     
-    <!-- Deletion Confirmation Modal -->
     <div class="modal fade" id="confirm_deletion_modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

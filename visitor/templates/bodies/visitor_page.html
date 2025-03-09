@@ -35,20 +35,19 @@
         .card-header {
             height: 20%;
             max-width: 100%;
-            white-space: nowrap;     /* Empêche le texte de passer à la ligne */
-            overflow: hidden;        /* Cache le texte qui dépasse */
-            text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
         }
 
         .card-body::-webkit-scrollbar {
           display: none;
         }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
+        
         .card-body {
             height: 80%;
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none; 
             overflow: scroll;
         }
         

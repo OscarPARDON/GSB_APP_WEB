@@ -1,9 +1,10 @@
 import os
 from django import forms
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator, EmailValidator
+from django.core.validators import RegexValidator
+##############################################################################################################
 
-
+# This form is used for applications
 class ApplicationForm(forms.Form):
 
     name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Entrez votre nom'})) # Input candidate's name
@@ -51,4 +52,4 @@ class ApplicationForm(forms.Form):
             if (cv.size == None or cv.size > 30000000) or (cover_letter.size == None or cover_letter.size > 30000000) : # If the CV or Cover letter file is bigger than 30Mo ...
                 raise forms.ValidationError("Le fichier ne doit pas être vide et être inférieur à 30Mo") # Sends the error
 
-        return cleaned_data
+        return cleaned_data # Returned the transformed data

@@ -21,8 +21,8 @@ urlpatterns = [
     path('update_publication', views.publication_update, name='update_publication'), # Page to update a publication
     path('change_password', views.employee_change_password, name='employee_change_password'), # Page to change password
     path('reset_password', views.reset_employee_password, name='employee_reset_password'), # Path to reset an employee's password
-    path('validated_applications', views.validated_applications, name='validated_applications'),
-    path('archive_publication', views.archive_publication, name='archive_publication'),
-    path('archived_applications', views.archived_applications, name='archived_applications'),
-    path('archived_application_info', views.archived_application_info, name='archived_application_info'),
+    path('validated_applications', views.validated_applications, name='validated_applications'), # Page to access to validated applications
+    path('archive_publication', views.archive_publication, name='archive_publication'),  # Path to archive a publication
+    path('archived_applications', views.archived_applications, name='archived_applications'), # Archive page
+    path('archived_application_info', views.archived_application_info, name='archived_application_info'), # Page that display the detail of an archived application
 ]

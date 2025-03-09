@@ -4,65 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="ADDED :&#10;- The employee account creation process is completed : After an admin creates an account for an employee, a mail is sent to the employee to inform him that his account was created and to communicate his temporary password. The first time the user connects, he is asked to change his password.&#10;- Mailing for employees : actions like account creation or password reset now send an email to inform the relevant employee.&#10;- Mailing for candidates : Change on the application status, password change, application creation and more now send an email to inform the candidate.&#10;- Employee password reset : An admin can now reset the password of any employee. If the password is reset, a temporary password is sent by email and the employee will be asked to change his password at the next connection.&#10;- Forgot application number : If the candidate forgets his application number, he can now request to get his application number with his email.&#10;- Candidate forgot password : If the candidate forgets his password, he can now request for a password reset link sent by email. If the password reset link is clicked, the password will be reset and the candidate will be asked to change his password.&#10;&#10;&#10;MODIFICATIONS :&#10;- Category folders were created to sort templates&#10;- Unique size for job offers on the main page (might change) and a button to go to the next offer was added to make navigation easier">
-      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/images/archive.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/images/login.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conversation/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conversation/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conversation/templates/candidate_chat.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conversation/templates/employee_chat.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/conversation/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/employee/templates/bodies/archived_application_info.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/employee/templates/bodies/archived_applications.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/employee/templates/bodies/validated_applications.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailing/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailing/templates/change_interview_status_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailing/templates/interview_cancellation_email.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/mailing/wsgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/DjangoProject1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DjangoProject1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DjangoProject1/middleware.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/middleware.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DjangoProject1/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DjangoProject1/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DjangoProject1/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/wsgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/bodies/candidate_hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/bodies/candidate_hub.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/bodies/sent_confirmation.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/bodies/sent_confirmation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/emails/deletion_confirmation_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/deletion_confirmation_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/emails/forgot_application_number_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/forgot_application_number_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/emails/reset_password_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/reset_password_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/emails/status_update_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/status_update_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/forms/candidate_application_number_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/forms/candidate_application_number_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/forms/candidate_change_password_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/forms/candidate_change_password_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/forms/candidate_email_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/forms/candidate_email_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/forms/candidate_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/forms/candidate_login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/templates/forms/update_application_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/templates/forms/update_application_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/candidate/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/candidate/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/admin_hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/hub.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/employee_hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/application_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/offer_applications.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/offer_applications.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/publication_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/publication_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/user_management.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/user_management.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/emails/confirm_password_change_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/confirm_password_change_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/emails/employee_password_reset_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/employee_password_reset_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/emails/new_employee_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/new_employee_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/emails/publication_deletion_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/publication_deletion_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/forms/employee_change_password_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/forms/employee_change_password_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/forms/employee_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/forms/employee_login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/forms/new_employee_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/forms/new_employee_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/forms/publication_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/forms/publication_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/templates/forms/update_employee_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/forms/update_employee_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/templates/bodies/application_success.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/bodies/application_success.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/templates/bodies/visitor_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/bodies/visitor_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/templates/emails/application_confirmation_email.html" beforeDir="false" afterPath="$PROJECT_DIR$/mailing/templates/application_confirmation_email.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/templates/forms/application_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/templates/forms/application_form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/visitor/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/views.py" afterDir="false" />
-    </list>
+    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -74,8 +16,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -282,7 +224,16 @@
       <workItem from="1740125932416" duration="1876000" />
       <workItem from="1740128002381" duration="5605000" />
       <workItem from="1740336245807" duration="2925000" />
-      <workItem from="1740348592280" duration="3258000" />
+      <workItem from="1740348592280" duration="3709000" />
+      <workItem from="1740432526399" duration="2869000" />
+      <workItem from="1740522137858" duration="598000" />
+      <workItem from="1740864549122" duration="5255000" />
+      <workItem from="1740923426767" duration="14506000" />
+      <workItem from="1741275291889" duration="652000" />
+      <workItem from="1741298708422" duration="1803000" />
+      <workItem from="1741383763818" duration="8291000" />
+      <workItem from="1741473897987" duration="7027000" />
+      <workItem from="1741528447481" duration="3007000" />
     </task>
     <task id="LOCAL-00001" summary="ADDED :&#10;- Main page that displays all the current job offers&#10;- Choose login modal : let you chose between the employee login page and the candidates login page&#10;- Application form to let the user create an application for a job offer&#10;- Application form management : management of the recieved data, every input is checked in the front-end and back-end and inserted in the Database&#10;- Successful Application Page : Page displayed if the application form is successfully sent, this page display the application number that the user needs to login">
       <option name="closed" value="true" />
@@ -340,7 +291,23 @@
       <option name="project" value="LOCAL" />
       <updated>1737229112966</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="ADDED :&#10;- Second step in applications validation : Validated applications have now new features accessible from the employee menu. Employees can now chat and plan interviews with candidates of witch the application was validated.&#10;- Archivation feature : Publications can now be archived with all the validated applications that are linked to it.&#10;- New Manager role : Managers have access to application management, archives and validated applications (chat).&#10;&#10;Modifications :&#10;- Improved visuals and responsiveness : Unique color theme, responsive pages for smartphones on the public pages.&#10;- The mailing system was centralized : a universal asynchronous function to send mail was created and the email templates were gathered with the function into an application.&#10;- Fixed bugs.">
+      <option name="closed" value="true" />
+      <created>1740352278762</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1740352278763</updated>
+    </task>
+    <task id="LOCAL-00009" summary="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)">
+      <option name="closed" value="true" />
+      <created>1741531440223</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1741531440224</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -367,6 +334,8 @@
     <MESSAGE value="ADDED :&#10;- Login System : Added a login system for the employees, the backends for the employees and candidates have been merged into one general backend&#10;- Access management for the employee private pages : Authentication is strictly required and controlled to access the employees private pages&#10;- Employees section : Accessible after login, displays all the current job offers, a search bar was added, the page gives access to the applications list about an offer &#10;- Offer Applications : This page displays a table of all the applications of an offer, the table is sortable by status, the table enable to reject, accept or cancel the verdict of each application &#10;&#10;MODIFICATIONS :&#10;- Improve visual look of the application&#10;- Improved data control on all forms" />
     <MESSAGE value="ADDED :&#10;- Roles for the employees : employees can be assigned a role of employee or admin.&#10;- Admin Menu : After login, the users with the role Admin are sent on a menu to chose between Application Management, User Management or Publication Management.&#10;- User Management : Admin Users can access to a table of all users with which they can search, create, edit and delete users.&#10;- Publication Management : Admin Users can access to a table of all publications with which they can search, create, edit and delete publications.&#10;- Cookie Management : The Session is deleted after some time of inactivity, the session is deleted after closing the browser, some security parameters on cookies have been activated.&#10;&#10;MODIFICATIONS :&#10;- The two middlewares have been merged into one global middleware in the common application&#10;- The duplicate verification on the applications have been modified : you can't apply for an offer with the same name more than one, you can't apply for an offer more than one with the same email." />
     <MESSAGE value="ADDED :&#10;- The employee account creation process is completed : After an admin creates an account for an employee, a mail is sent to the employee to inform him that his account was created and to communicate his temporary password. The first time the user connects, he is asked to change his password.&#10;- Mailing for employees : actions like account creation or password reset now send an email to inform the relevant employee.&#10;- Mailing for candidates : Change on the application status, password change, application creation and more now send an email to inform the candidate.&#10;- Employee password reset : An admin can now reset the password of any employee. If the password is reset, a temporary password is sent by email and the employee will be asked to change his password at the next connection.&#10;- Forgot application number : If the candidate forgets his application number, he can now request to get his application number with his email.&#10;- Candidate forgot password : If the candidate forgets his password, he can now request for a password reset link sent by email. If the password reset link is clicked, the password will be reset and the candidate will be asked to change his password.&#10;&#10;&#10;MODIFICATIONS :&#10;- Category folders were created to sort templates&#10;- Unique size for job offers on the main page (might change) and a button to go to the next offer was added to make navigation easier" />
-    <option name="LAST_COMMIT_MESSAGE" value="ADDED :&#10;- The employee account creation process is completed : After an admin creates an account for an employee, a mail is sent to the employee to inform him that his account was created and to communicate his temporary password. The first time the user connects, he is asked to change his password.&#10;- Mailing for employees : actions like account creation or password reset now send an email to inform the relevant employee.&#10;- Mailing for candidates : Change on the application status, password change, application creation and more now send an email to inform the candidate.&#10;- Employee password reset : An admin can now reset the password of any employee. If the password is reset, a temporary password is sent by email and the employee will be asked to change his password at the next connection.&#10;- Forgot application number : If the candidate forgets his application number, he can now request to get his application number with his email.&#10;- Candidate forgot password : If the candidate forgets his password, he can now request for a password reset link sent by email. If the password reset link is clicked, the password will be reset and the candidate will be asked to change his password.&#10;&#10;&#10;MODIFICATIONS :&#10;- Category folders were created to sort templates&#10;- Unique size for job offers on the main page (might change) and a button to go to the next offer was added to make navigation easier" />
+    <MESSAGE value="ADDED :&#10;- Second step in applications validation : Validated applications have now new features accessible from the employee menu. Employees can now chat and plan interviews with candidates of witch the application was validated.&#10;- Archivation feature : Publications can now be archived with all the validated applications that are linked to it.&#10;- New Manager role : Managers have access to application management, archives and validated applications (chat).&#10;&#10;Modifications :&#10;- Improved visuals and responsiveness : Unique color theme, responsive pages for smartphones on the public pages.&#10;- The mailing system was centralized : a universal asynchronous function to send mail was created and the email templates were gathered with the function into an application.&#10;- Fixed bugs." />
+    <MESSAGE value="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)" />
   </component>
 </project>

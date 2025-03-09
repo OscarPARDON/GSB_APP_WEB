@@ -13,8 +13,8 @@
             height: 20%;
             max-width: 100%;
             white-space: nowrap;
-            overflow: hidden !important;        /* Forcer l'overflow hidden */
-            text-overflow: ellipsis !important; /* Forcer l'ellipsis */
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }
         
         .modal-content {
@@ -24,12 +24,11 @@
         .card-body::-webkit-scrollbar {
           display: none;
         }
-
-        /* Hide scrollbar for IE, Edge and Firefox */
+        
         .card-body {
             height: 80%;
-          -ms-overflow-style: none;  /* IE and Edge */
-          scrollbar-width: none;  /* Firefox */
+          -ms-overflow-style: none;
+          scrollbar-width: none;
             overflow: scroll;
         }
         
@@ -42,8 +41,11 @@
     
     
     <header class="dark-bg d-flex justify-content-between align-items-center fixed-top py-2" >
-            <div></div>
-            <div class="ms-5 ps-3"><a href="{%if request.user.role == 'admin'%}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ps-3">
+                <p class="text-white mb-0">{{ request.user.employee_lastname }} {{ request.user.employee_firstname }}</p>
+                <p class="text-white">{% if request.user.role == "admin" %}Administrateur{% elif request.user.role == "manager" %}Manager{% else %}Employé{% endif %}</p>
+            </div>
+            <div><a href="{%if request.user.role == 'admin'%}/employee/hub{% endif %}"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
     
@@ -117,7 +119,7 @@
             </div>
         </div>
     
-    <!-- Modal to confirm the deletion of a publication -->
+    <!-- Modal to confirm the archivation of a publication -->
         <div class="modal fade" id="confirm_archive_modal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -141,9 +143,9 @@
 
     <script>
     
-        // This function fill automatically the id of the user into the GET variable
+        // This function fill automatically the id of the post into the GET variable
         function fill_deletion_modal(postID){
-            if(postID && Number.isInteger(postID)){ // If the UserID is set and has the right format ...
+            if(postID && Number.isInteger(postID)){ // If the post ID is set and has the right format ...
                 url = "/employee/delete_publication?postID=" + postID; // Create the deletion URL
                 document.getElementById("submit_deletion").href = url; // Send the deletion url into the modal
             }
@@ -151,23 +153,23 @@
     
         // This function fill automatically the id of the user into the GET variable
         function fill_archive_modal(postID){
-            if(postID && Number.isInteger(postID)){ // If the UserID is set and has the right format ...
-                url = "/employee/archive_publication?postID=" + postID; // Create the deletion URL
-                document.getElementById("submit_archive").href = url; // Send the deletion url into the modal
+            if(postID && Number.isInteger(postID)){ // If the post ID is set and has the right format ...
+                url = "/employee/archive_publication?postID=" + postID; // Create the archivation URL
+                document.getElementById("submit_archive").href = url; // Send the archivation url into the modal
             }
         }
     
         // This Function compare the value of the search field with the posts titles and make the posts disappear if they don't match
          function search() {
-            const search_value = document.getElementById("search_bar").value.toLowerCase();
-            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Cibler les colonnes
-            const offers_title = Array.from(document.getElementsByClassName("card-header"));
+            const search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the search value
+            const containers = Array.from(document.getElementsByClassName("col-lg-3")); // Get the posts
+            const offers_title = Array.from(document.getElementsByClassName("card-header")); // Get the title of the posts
             
-            containers.forEach((container, index) => {
-                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){
-                    container.style.display = 'none';
+            containers.forEach((container, index) => { // For each post
+                if(search_value != '' && !offers_title[index].textContent.toLowerCase().includes(search_value)){ // Compare the title of the post with the search value
+                    container.style.display = 'none'; // If they don't match : vanish the post
                 } else {
-                    container.style.display = 'block';
+                    container.style.display = 'block'; // If they match : display the post
                 }
             });
         }

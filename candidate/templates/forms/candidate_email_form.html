@@ -1,8 +1,8 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+{% block content %} <!-- Form to get an email, it is used if the user forgets his application number -->
     
-    <header class="dark-bg border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2">
+<header class="dark-bg border-bottom border-dark d-flex justify-content-center align-items-center fixed-top py-2">
     <div>
         <a href="/">
             <img src="{% static 'images/gsb_logo.png' %}" class="img-fluid" style="max-width: 130px" alt="Logo GSB">

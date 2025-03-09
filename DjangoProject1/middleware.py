@@ -1,5 +1,5 @@
-from django.conf import settings
 from django.shortcuts import redirect
+#########################################################################################################
 
 # This global middleware manage the access to the urls
 class LoginRequiredMiddleware:
@@ -16,12 +16,15 @@ class LoginRequiredMiddleware:
         if not request.user.is_authenticated and request.path not in public_path:
             return redirect('/') # Redirection to the visitor homepage
 
+        # If the user is a candidate and is trying to access the employees' side of the chat ...
         if hasattr(request.user,"application_number") and request.path in ["/chat/employee","/chat/new_interview","/chat/delete_interview"]:
-            return redirect("/")
+            return redirect("/") # Redirect to the main page
+        # If the user is an employee and is trying to access the candidates' side of the chat ...
         if hasattr(request.user,"employee_email") and request.path in ["/chat/candidate","/chat/update_interview_status"]:
-            return redirect("/")
+            return redirect("/") # Redirect to the main page
+        # If a user with the role employee try to access admin views
         if request.path in ["/chat/employee","/chat/new_interview","/chat/delete_interview"] and hasattr(request.user,"role") and request.user.role == "employee":
-            return redirect("/employee/hub")
+            return redirect("/employee/hub") # Redirect to the employees' main page
 
         # Bypass the login page if the user is already authenticated
         if (request.path == candidate_login_path) and (request.user.is_authenticated) and (hasattr(request.user, 'application_number')) :

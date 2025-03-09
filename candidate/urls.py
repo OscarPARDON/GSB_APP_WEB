@@ -5,7 +5,7 @@ from .views import forgot_application_number
 ##############################################################################################################
 
 urlpatterns = [
-    path('',views.candidate_hub,name='default'), #By default, try to display the main candidate page
+    path('',views.candidate_hub,name='default'), #By default, display the main candidate page
     path('login', views.candidate_login, name='candidate_login'), # Login Form
     path('hub', views.candidate_hub, name='candidate_hub'), # Main page for candidates
     path('logout', views.candidate_logout, name='candidate_logout'), # Path used to Log out the user

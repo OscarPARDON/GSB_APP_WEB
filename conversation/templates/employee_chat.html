@@ -1,10 +1,10 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Main Candidate page : Display the summary of the application, enable the candidate to modify and delete his data -->
+{% block content %} <!-- Chat page for employees -->
 
     <style>
         
-         .bubble {
+         .bubble { /* Style for the chat bubbles */
                     --r: 1em;  /* the radius */
                     --t: 1.5em; /* the size of the tail */
                     max-width: 300px;
@@ -31,9 +31,9 @@
             background-color: #111d4a;
         }
 
-#messages-container::-webkit-scrollbar {
-  display: none;
-}
+        #messages-container::-webkit-scrollbar {
+          display: none;
+        }
 
     </style>
     
@@ -96,8 +96,7 @@
                         {% else %}
                             <div class="p-3 mt-2 w-50 d-flex flex-column align-items-center border rounded ms-auto position-relative 
                                 {% if message.status == 1 %}border-danger{% elif message.status == 2 %}border-success{% else %}border-warning{% endif %}">
-    
-                                <!-- Bouton de fermeture -->
+                            
                                 <a href="#" onclick="fill_cancellation_modal({{ message.id }})" data-bs-toggle="modal" data-bs-target="#confirm_cancellation_modal" class="position-absolute top-0 end-0 me-3 text-dark text-decoration-none fs-2" aria-label="Fermer">
                                     &times;
                                 </a>
@@ -160,12 +159,11 @@
         </div>
         <script>
             
-            function fill_cancellation_modal(interviewID){
+            function fill_cancellation_modal(interviewID){ // This function auto-fill the interview cancellation confirmation modal
             
-                if(interviewID && Number.isInteger(interviewID)){ // If the UserID is set and has the right format ...
-                    document.getElementById("interviewId").value = interviewID;
+                if(interviewID && Number.isInteger(interviewID)){ // If the interview ID is set and has the right format ...
+                    document.getElementById("interviewId").value = interviewID; // Fill the form with the interview id
                 }
-            
             }
             
         </script>
@@ -207,12 +205,12 @@
             </div>
         </div>
     
-    {% if error %}
-        <script>
+    {% if error %} 
+        <script> // If an error occur when trying to create a new interview
         
-          document.addEventListener("DOMContentLoaded", function () {
-            var myModal = new bootstrap.Modal(document.getElementById("new_interview_modal"));
-            myModal.show();
+          document.addEventListener("DOMContentLoaded", function () { // Listener : When the page loads ...
+            var myModal = new bootstrap.Modal(document.getElementById("new_interview_modal")); // Get the interview creation modal
+            myModal.show(); // Open the modal
           });
           
         </script>
@@ -220,12 +218,11 @@
     
     </main>
     
-    
     <script>
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const container = document.getElementById('messages-container');
-            container.scrollTop = container.scrollHeight;
+        document.addEventListener('DOMContentLoaded', function () { // Listener : When the page loads ...
+            const container = document.getElementById('messages-container'); // Get the conversation container
+            container.scrollTop = container.scrollHeight; // Scroll to the bottom of the conversation
         });
         
     </script>

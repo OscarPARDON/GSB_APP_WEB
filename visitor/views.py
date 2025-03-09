@@ -1,11 +1,8 @@
 import os # Import os management module
 from datetime import datetime # Import datetime module
 from django.contrib.auth.hashers import make_password # Import password creation module
-from django.core.mail import EmailMessage
 from django.db.models import Max # Import Database max request module
 from django.shortcuts import render, redirect # Shortcuts to import Django modules
-from django.template.loader import render_to_string
-from DjangoProject1 import settings
 from DjangoProject1.settings import STATICFILES_DIRS # Import variable from project settings
 from candidate.models import Application # Import Application Model
 from mailing.wsgi import send_email
@@ -21,7 +18,7 @@ def visitorpage(request): # Default Page
     return render(request, 'bodies/visitor_page.html', {'posts': posts, 'error': error}) # Call the template and pass the variables
 
 
-def application(request): # Application Page : Displays the application form & manage the data submition
+def application(request): # Application Page : Displays the application form & manage the data submission
 
     # Get the id of the job offer in the URL and verify the value
     postID = request.GET.get('postID', '') # Get the job offer linked to the application
@@ -30,7 +27,7 @@ def application(request): # Application Page : Displays the application form & m
 
     if request.method == 'POST': # If a form is submitted
 
-        form = ApplicationForm(request.POST, request.FILES)  # Collect the submited form's data
+        form = ApplicationForm(request.POST, request.FILES)  # Collect the submitted form's data
 
         if form.is_valid():
 
@@ -63,7 +60,7 @@ def application(request): # Application Page : Displays the application form & m
             )
             insertion.save() # Save the application in the database
 
-            send_email('application_confirmation_email.html',{'publication_name':insertion.job_publication.title, 'application_number':insertion.application_number},[form.cleaned_data['email']])
+            send_email('application_confirmation_email.html',{'publication_name':insertion.job_publication.title, 'application_number':insertion.application_number},[form.cleaned_data['email']]) # Send an email to confirm that the application was successfully created
 
             #Files management
             path = os.path.join('', str(STATICFILES_DIRS[0]) + '/files/' + number ) # Get the path of the file storage repository
@@ -88,10 +85,10 @@ def application(request): # Application Page : Displays the application form & m
     else: # If no form is submitted ...
         form = ApplicationForm() # Get the form from forms.py
 
+    print(form.errors)
     return render(request, 'forms/application_form.html', {'form': form, 'postID': postID}) # Call the application form and pass the variables
 
-
-def application_success(request): # Successful Application Page : inform the user that the application was sucessfully sent and display the application number needed to connect
+def application_success(request): # Successful Application Page : inform the user that the application was successfully sent and display the application number needed to connect
     application_number = request.GET.get('application_number', '') # Get the newly created application number
     if (application_number == '') or not (Application.objects.filter(application_number=application_number)): return redirect('/') # If the received application number is null or incorrect
     return render(request, 'bodies/application_success.html', {'application_number': application_number}) # Call the successful application template and pass the variable

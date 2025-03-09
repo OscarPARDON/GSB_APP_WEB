@@ -1,10 +1,13 @@
 {% extends 'base.html' %} <!-- Call the HTML head -->
 {% load static %} <!-- Load the Static resources directory (images) -->
-{% block content %} <!-- Admin main page : Menu to let the user chose which module he wants to access -->
+{% block content %} <!-- Page that displays all the application that were validated -->
     
     <header class="dark-bg border-bottom border-dark d-flex justify-content-between align-items-center fixed-top py-2" >
-            <div></div>
-            <div class="ms-5 ps-3"><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
+            <div class="ps-3">
+                <p class="text-white mb-0">{{ request.user.employee_lastname }} {{ request.user.employee_firstname }}</p>
+                <p class="text-white">{% if request.user.role == "admin" %}Administrateur{% elif request.user.role == "manager" %}Manager{% else %}Employé{% endif %}</p>
+            </div>
+            <div><a href="/employee/hub"><img src="{% static "images/gsb_logo.png" %}" style="width: 130px" alt="Logo GSB"></a></div>
             <div class="me-5"><a href="/employee/logout"><img src="{% static "images/logout.svg" %}" style="width: 50px" alt="Se Deconnecter"></a></div>
     </header>
     
@@ -75,7 +78,7 @@
             search_value = document.getElementById("search_bar").value.toLowerCase(); // Get the value of the search field
             offers = Array.from(document.getElementsByClassName("card")); // Get all the posts
             offers_title = Array.from(document.getElementsByClassName("card-header")); // Get all the posts titles
-            emptySearch = true;
+            emptySearch = true; // Boolean to know if the search has results or not
 
             offers.forEach((offer, index) => { // Verify that the post title match with the search value for all the posts
 
@@ -85,23 +88,20 @@
 
                 else{ // The search value match with the title
                     offer.style.display = 'block'; // Makes the post appear
-                    emptySearch = false
+                    emptySearch = false // The search has at least one result so it is not empty
                 }
-                
             })
 
-            if(emptySearch){
-                document.getElementById("emptySearch").style.display = 'block';
+            if(emptySearch){ // If the search has no result
+                document.getElementById("emptySearch").style.display = 'block'; // Display the no result message
             }
-            else{
-                document.getElementById("emptySearch").style.display = 'none';
+            else{ // If the search is not empty
+                document.getElementById("emptySearch").style.display = 'none'; // Don't display the message
             }
         }
 
         document.getElementById("search_bar").addEventListener('change',search); // Trigger the search function when the value of the search field changes
-
-
+        
     </script>
-
-
+    
 {% endblock %}
