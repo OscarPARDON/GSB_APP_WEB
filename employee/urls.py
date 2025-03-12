@@ -25,4 +25,5 @@ urlpatterns = [
     path('archive_publication', views.archive_publication, name='archive_publication'),  # Path to archive a publication
     path('archived_applications', views.archived_applications, name='archived_applications'), # Archive page
     path('archived_application_info', views.archived_application_info, name='archived_application_info'), # Page that display the detail of an archived application
+    path('application_delete',views.application_delete, name='delete_application'), # Path to delete an application
 ]

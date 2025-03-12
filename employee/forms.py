@@ -56,7 +56,7 @@ class UpdateEmployeeForm(forms.ModelForm):
 
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # FFirstname of the employee
-    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'email professionnel de l'employé"}))) # Email of the employee
     role = forms.ChoiceField(choices=[('employee', 'Employé'), ('admin', 'Admin'),('manager','Manager')],widget=forms.Select(attrs={'class': 'form-control'})) # Role of the employee
 
     def clean(self):
@@ -86,7 +86,7 @@ class UpdateSelfForm(forms.ModelForm):
 
     employee_lastname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le nom de famille de l'employé"}))) # Lastname of the employee
     employee_firstname = forms.CharField(max_length=50, widget=(forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Entrez le prénom de l'employé"}))) # Firstname of the employee
-    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionel de l'employé"}))) # Email of the employee
+    employee_email = forms.EmailField(max_length=200, widget=(forms.EmailInput(attrs={'class': 'form-control', 'placeholder': "Entrez l'emails professionnel de l'employé"}))) # Email of the employee
 
     def clean(self):
         cleaned_data = super().clean() # Get the form data cleaned by the default function

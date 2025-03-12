@@ -17,7 +17,7 @@ from pathlib import Path # Import path management module
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ''
+SECRET_KEY = 'django-insecure-tiigma0a%ncqdkvsv1z9$4u#ql46gzi=a=fq#@@tg1+=*_t(ht'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -91,21 +91,21 @@ WSGI_APPLICATION = 'DjangoProject1.wsgi.application' # WSGI of the applications
 DATABASES = {
     'default': { # Default Database
         'ENGINE': 'django.db.backends.mysql', # Engine used by the DB
-        'NAME': '', # Name of the DB
-        'USER': '', # Username to connect to the DB
-        'PASSWORD': '', # Password to connect to the DB
-        'HOST': '', # Address of the DB
-        'PORT': '', # Port to access the DB
+        'NAME': 'gsb_app', # Name of the DB
+        'USER': 'root', # Username to connect to the DB
+        'PASSWORD': 'MutualiteDatabase5360?', # Password to connect to the DB
+        'HOST': '127.0.0.1', # Address of the DB
+        'PORT': '3306', # Port to access the DB
     }
 }
 
 # SMTP Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Backend used to send emails
-EMAIL_HOST = ''  # SMTP Server address
+EMAIL_HOST = 'smtp.gmail.com'  # SMTP Server address
 EMAIL_PORT = 587 # SMTP server access port
 EMAIL_USE_TLS = True # Email encryption
-EMAIL_HOST_USER = '' # Email address used
-EMAIL_HOST_PASSWORD = '' # Password for the email address
+EMAIL_HOST_USER = 'oscar.pardon88@gmail.com' # Email address used
+EMAIL_HOST_PASSWORD = 'mwkx keon jqqa eyyd' # Password for the email address
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -141,4 +141,4 @@ STATICFILES_DIRS = [BASE_DIR / 'DjangoProject1/static'] # Absolute path to the s
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Local Message Encryption Token
-MSG_ENC_TOKEN = ''
+MSG_ENC_TOKEN = 'bb9b62314f6af1950103ed948429d8a'

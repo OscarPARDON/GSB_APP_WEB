@@ -23,14 +23,15 @@ class ApplicationTest(TestCase):
         self.assertEqual(response.status_code, 302) # Verify that the HTTP status is redirection (302)
         self.assertRedirects(response, '/') # Verify that the view redirect to the main page as expected
 
-    def test_valid_application(self): # Test the view when a valid application is sent
+    def test_valid_application(self): # 
+        # Créer des fichiers de test directement en mémoire
+        cv_content = b'some cv content'  # Contenu binaire du fichier
+        cover_letter_content = b'some cover letter content'  # Contenu binaire du fichier
 
-        cv_content = b'some cv content'  # Create fake files for the test
-        cover_letter_content = b'some cover letter content'  # Create fake files for the test
+        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf")
+        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf")
 
-        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf") # Upload the files
-        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf") # Upload the files
-
+        # Combinez les données et les fichiers dans UN SEUL dictionnaire
         data = {
             "firstname": "Jean",
             "name": "DUPONT",
@@ -38,24 +39,26 @@ class ApplicationTest(TestCase):
             "phone": "0601020304",
             "password": "Caracas5360?",
             "confirm": "Caracas5360?",
-            "cv": cv_file,
-            "cover_letter": cover_letter_file
-        } # Create a test valid form
+            "cv": cv_file,  # Ajoutez les fichiers directement dans le dictionnaire data
+            "cover_letter": cover_letter_file  # Ajoutez les fichiers directement dans le dictionnaire data
+        }
 
-        response = self.client.post(self.valid_url, data) # Send form in POST to the view
+        # Envoyez une seule requête POST
+        response = self.client.post(self.valid_url, data)
 
         # Vérifications
-        self.assertEqual(Application.objects.all().count(), 1) # Check that the application was successfully created
-        application = Application.objects.first() # Get the application
-        self.assertEqual(application.candidate_firstname, 'Jean') # Check that the firstname was successfully registered
-        self.assertEqual(application.candidate_lastname, 'DUPONT') # Check that the lastname was successfully registered
-        self.assertEqual(application.candidate_mail, 'jean.dupont@example.com') # Check that the email was successfully registered
-        self.assertTrue(
-            check_password('Caracas5360?', application.candidate_password))  # Check that the password was successfully hashed and registered
-        self.assertEqual(response.status_code, 302) # Check that HTTP status is redirection (302) as expected
+        self.assertEqual(Application.objects.all().count(), 1)
 
-    def test_duplicate_application(self): # This test the view's reaction when a duplicata is created
-        Application.objects.create( # Create an application
+        application = Application.objects.first()
+        self.assertEqual(application.candidate_firstname, 'Jean')
+        self.assertEqual(application.candidate_lastname, 'DUPONT')
+        self.assertEqual(application.candidate_mail, 'jean.dupont@example.com')
+        self.assertTrue(
+            check_password('Caracas5360?', application.candidate_password))  # J'ai corrigé le mot de passe ici
+        self.assertEqual(response.status_code, 302)
+
+    def test_duplicate_application(self):
+        Application.objects.create(
             application_number="20240301001",
             candidate_firstname="Jean",
             candidate_lastname="DUPONT",
@@ -66,13 +69,13 @@ class ApplicationTest(TestCase):
             status=1,
         )
 
-        cv_content = b'some cv content' # Create fake files for the test
-        cover_letter_content = b'some cover letter content' # Create fake files for the test
+        cv_content = b'some cv content'
+        cover_letter_content = b'some cover letter content'
 
-        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf") # Upload the file
-        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf") # Upload the file
+        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf")
+        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf")
 
-        # Create a valid form with the same lastname and firstname as the already created one
+        # Tous les données et fichiers dans un seul dictionnaire
         data = {
             "firstname": "Jean",
             "name": "DUPONT",
@@ -84,12 +87,12 @@ class ApplicationTest(TestCase):
             "cover_letter": cover_letter_file
         }
 
-        response = self.client.post(self.valid_url, data) # Send the form in POST & get the HTTP status
-        self.assertEqual(Application.objects.filter(candidate_lastname="DUPONT", candidate_firstname="Jean").count(), 1) # Check if the application was registered (it should not)
-        self.assertRedirects(response, '/?error=Vous avez déja candidaté pour cette offre') # Check if the view sent a duplicata error
+        response = self.client.post(self.valid_url, data)
+        self.assertEqual(Application.objects.filter(candidate_lastname="DUPONT", candidate_firstname="Jean").count(), 1)
+        self.assertRedirects(response, '/?error=Vous avez déja candidaté pour cette offre')
 
-    def test_duplicate_email_application(self): # This test the view's reaction to an application with an email duplicata
-        Application.objects.create( # Create an application for the test
+    def test_duplicate_email_application(self):
+        Application.objects.create(
             application_number="20240301001",
             candidate_firstname="Other",
             candidate_lastname="NAME",
@@ -100,12 +103,13 @@ class ApplicationTest(TestCase):
             status=1,
         )
 
-        cv_content = b'some cv content' # Create a fake file for the test
-        cover_letter_content = b'some cover letter content' # Create a fake file for the test
+        cv_content = b'some cv content'
+        cover_letter_content = b'some cover letter content'
 
-        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf") # Upload the file
-        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf") # Upload the file
+        cv_file = SimpleUploadedFile("cv.pdf", cv_content, content_type="application/pdf")
+        cover_letter_file = SimpleUploadedFile("coverletter.pdf", cover_letter_content, content_type="application/pdf")
 
+        # Tous les données et fichiers dans un seul dictionnaire
         data = {
             "firstname": "Jean",
             "name": "DUPONT",
@@ -115,8 +119,8 @@ class ApplicationTest(TestCase):
             "confirm": "Caracas5360?",
             "cv": cv_file,
             "cover_letter": cover_letter_file
-        } # Create a valid application form with the same email as the already created one
+        }
 
-        response = self.client.post(self.valid_url, data) # Send the form in POST & get the HTTP status
-        self.assertEqual(Application.objects.all().count(), 1) # Verify that the application was not created
-        self.assertRedirects(response, '/?error=Vous avez déja candidaté pour cette offre') # Check that the view returns a duplicata error
+        response = self.client.post(self.valid_url, data)
+        self.assertEqual(Application.objects.all().count(), 1)
+        self.assertRedirects(response, '/?error=Vous avez déja candidaté pour cette offre')

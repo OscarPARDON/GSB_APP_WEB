@@ -14,8 +14,8 @@
     <main class="container vw-100 d-flex flex-column align-items-center" style="padding-top: 6%;height: 100vh">
         <h1 class="dark-txt fs-1">Menu</h1>
         <a class="w-50 h-25 btn text-start {% if request.user.role == "manager" %}mt-5{% endif %} dark-bg pt-5 mb-3 ps-5 fw-bold fs-5 text-white text-decoration-none" href="application_management">Candidatures</a>
-        <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="validated_applications">Candidatures Validées</a>
-        <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="archived_applications">Candidatures Archivées</a>
+        <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="validated_applications">Conversations</a>
+        <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="archived_applications">Archives</a>
         {% if request.user.role == "admin" %}
             <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="admin_user_management" >Utilisateurs</a>
             <a class="w-50 h-25 pt-5 mb-3 btn text-start dark-bg ps-5 fw-bold fs-5 text-white text-decoration-none" href="admin_publication_management">Publications</a>

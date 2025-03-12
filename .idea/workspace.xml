@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)" />
+    <list default="true" id="f5620646-4828-4df1-a8c8-9eb4c454b1ec" name="Changes" comment="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)">
+      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/files/20250302000/coverletter.pdf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DjangoProject1/static/files/20250302000/cv.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DjangoProject1/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/DjangoProject1/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/employee/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee/forms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/archived_application_info.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/archived_application_info.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/hub.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/hub.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/employee/templates/bodies/offer_applications.html" beforeDir="false" afterPath="$PROJECT_DIR$/employee/templates/bodies/offer_applications.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/employee/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visitor/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/visitor/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/visitor/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -233,7 +245,14 @@
       <workItem from="1741298708422" duration="1803000" />
       <workItem from="1741383763818" duration="8291000" />
       <workItem from="1741473897987" duration="7027000" />
-      <workItem from="1741528447481" duration="3007000" />
+      <workItem from="1741528447481" duration="4511000" />
+      <workItem from="1741535603990" duration="634000" />
+      <workItem from="1741600841811" duration="5139000" />
+      <workItem from="1741646610276" duration="1531000" />
+      <workItem from="1741676877994" duration="5937000" />
+      <workItem from="1741718810862" duration="6301000" />
+      <workItem from="1741729306013" duration="923000" />
+      <workItem from="1741767638950" duration="6857000" />
     </task>
     <task id="LOCAL-00001" summary="ADDED :&#10;- Main page that displays all the current job offers&#10;- Choose login modal : let you chose between the employee login page and the candidates login page&#10;- Application form to let the user create an application for a job offer&#10;- Application form management : management of the recieved data, every input is checked in the front-end and back-end and inserted in the Database&#10;- Successful Application Page : Page displayed if the application form is successfully sent, this page display the application number that the user needs to login">
       <option name="closed" value="true" />
@@ -307,7 +326,15 @@
       <option name="project" value="LOCAL" />
       <updated>1741531440224</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="- Completed missing commentaries&#10;- Minor modification and finitions&#10;- Added information about the user on the header (Lastname, Firstname, Role)">
+      <option name="closed" value="true" />
+      <created>1741531906471</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1741531906471</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
